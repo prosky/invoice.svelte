@@ -1,0 +1,33 @@
+import type Invoice from "./Invoice";
+import type {StorageInterface} from "./Storage";
+import DataFactory from "../data/DataFactory";
+
+
+export default class Application {
+
+    locale: string;
+    dateFormat: string;
+
+    factory: DataFactory;
+
+    data: Invoice;
+
+    storage: StorageInterface;
+
+
+    constructor(storage: StorageInterface) {
+        this.storage = storage;
+        this.factory = DataFactory.default();
+    }
+
+    load() {
+        const invoice = this.factory.invoice();
+        const data = this.storage.load('data');
+        this.data = invoice;
+        if (data) {
+            Object.assign(this.data, data);
+        }
+    }
+
+
+}
