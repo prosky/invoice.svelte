@@ -3,10 +3,10 @@
     import Invoice from "../components/Invoice/Invoice.svelte";
     import Wrapper from "../components/Wrapper/Wrapper.svelte";
     import Document from "../components/Document/Document.svelte";
-    import {Button} from "sveltestrap";
+    import {Button} from "svelte-materialify";
     import {app} from '../app';
     let invoice  = app.data;
-    let document ;
+    let document: Document ;
     const downloadPDF = ()=>{
         console.log('downloadPDF');
     }

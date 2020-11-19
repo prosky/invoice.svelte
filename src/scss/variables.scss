@@ -1,0 +1,17 @@
+$color-primary: #23c4a4;
+$color-secondary: #ab2d90;
+$color-dark: #403e3e;
+$color-light: #ccc;
+$color-white: #fff;
+$color-black: #000;
+
+$theme-colors:(
+        "primary": $color-primary,
+        "secondary": $color-secondary,
+        "dark": $color-dark,
+        "light": $color-light,
+        "white": $color-white,
+        "black": $color-black,
+);
+
+$transition: .35s ease;

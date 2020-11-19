@@ -14,9 +14,12 @@ addMessages('cs-CZ', cs);
 
 application.load();
 
+const basePath = location.pathname.replace('index.html','');
+console.log(location);
 const app = new App({
 	target: document.body,
 	props: {
+        basePath
 		//name: 'world'
 	}
 });
