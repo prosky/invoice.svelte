@@ -104,26 +104,5 @@ export default class Invoice implements InvoiceInterface {
         this.client = new Company(country);
     }
 
-    calculateTax = (data: Product): number => {
-        const {taxRate, price, quantity} = data;
-        if (this.withVAT) {
-            return price * (taxRate / 100) * quantity;
-        }
-        return 0;
-    }
-
-    calculatePrice = (data: Product): number => {
-        const {price, quantity} = data;
-        return price * quantity;
-    }
-
-    sumPrice = (): number => {
-        return this.products.map(this.calculatePrice).reduce((a, b) => a + b, 0);
-    }
-
-    sumTax = (): number => {
-        return this.products.map(this.calculateTax).reduce((a, b) => a + b, 0);
-    }
-
 
 }

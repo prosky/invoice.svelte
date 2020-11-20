@@ -13,7 +13,7 @@ export default class Company implements CompanyInterface {
   name = '';
   address = '';
   address2 = '';
-  country = '';
+  country;
   cin = '';
   tin = '';
 

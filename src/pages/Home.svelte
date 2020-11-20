@@ -1,43 +1,48 @@
 <script lang="ts">
+    import {debounce} from 'lodash';
     import {_} from 'svelte-i18n';
     import Invoice from "../components/Invoice/Invoice.svelte";
     import Wrapper from "../components/Wrapper/Wrapper.svelte";
     import Document from "../components/Document/Document.svelte";
-    import {Button} from "svelte-materialify";
     import {app} from '../app';
-    let invoice  = app.data;
-    let document: Document ;
-    const downloadPDF = ()=>{
-        console.log('downloadPDF');
-    }
+    import Drawer from "../components/Drawer/Drawer.svelte";
+    import {Col, Container, Row, Select, Switch} from 'svelte-materialify/src';
+    import locales from "../app/data/localesList";
+    const format = (val) => locales[val];
+    const items = Object.entries(locales).map(([value, name]) => ({value, name}));
+    let invoice = app.data;
 
+    const save = debounce((invoice: Invoice) => {
+        app.save();
+    }, 1000);
+
+    $: {
+        save(invoice);
+    }
 </script>
 
 <div class="content">
-    <aside>
-        <nav>
-            <Button on:click={downloadPDF} title={$_('buttons.download_pdf')} >
-                {$_('buttons.download_pdf')}
-            </Button>
-        </nav>
-    </aside>
+    <Drawer/>
     <Wrapper>
-        <h1 class="text-primary text-center">{$_('page.home.title')}</h1>
-        <code class="text-white" type="json">
-            {invoice.title}
-            {invoice.client.name}
-        </code>
-        <Document bind:this={document}>
-            <Invoice bind:invoice />
-        </Document>
+        <div class="pt-8 pb-8">
+            <h1 class="text-primary text-h1 text-center mb-10">{$_('page.home.title')}</h1>
+            <nav>
+                <Container>
+                    <Row>
+                        <Col>
+                            <Switch bind:checked={invoice.withVAT}>{$_(`invoice.${invoice.withVAT ? 'withVAT' : 'withoutVAT'}`)}</Switch>
+                        </Col>
+                        <Col><Select {format} bind:value={invoice.locale} {items}>{$_('invoice.locale')}</Select></Col>
+                    </Row>
+                </Container>
+            </nav>
+            <Document>
+                <Invoice bind:invoice/>
+            </Document>
+        </div>
     </Wrapper>
 </div>
 
 <style type="scss">
-    .content{
-        margin-bottom: 10rem;
-    }
-    aside{
-        position: absolute;
-    }
+
 </style>

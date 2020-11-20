@@ -11,33 +11,37 @@
     "deploy": "gh-pages -d public"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^14.0.0",
+    "@mdi/js": "^5.8.55",
+    "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^8.0.0",
-    "@rollup/plugin-typescript": "^6.0.0",
-    "@tsconfig/svelte": "^1.0.0",
+    "@rollup/plugin-node-resolve": "^10.0.0",
+    "@rollup/plugin-typescript": "^6.1.0",
+    "@tsconfig/svelte": "^1.0.10",
     "@types/jspdf": "^1.3.3",
+    "@types/lodash": "^4.14.165",
     "autoprefixer": "^10.0.2",
     "carbon-components-svelte": "^0.22.0",
     "carbon-icons-svelte": "^10.21.0",
     "gh-pages": "^3.1.0",
+    "lodash": "^4.17.20",
     "postcss": "^8.1.8",
-    "rollup": "^2.3.4",
+    "rollup": "^2.33.3",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-scss": "^2.6.1",
-    "rollup-plugin-svelte": "^6.0.0",
-    "rollup-plugin-terser": "^7.0.0",
+    "rollup-plugin-svelte": "^6.1.1",
+    "rollup-plugin-terser": "^7.0.2",
     "sass": "^1.29.0",
-    "svelte": "^3.0.0",
-    "svelte-check": "^1.0.0",
+    "svelte": "^3.29.7",
+    "svelte-check": "^1.1.14",
     "svelte-i18n": "^3.2.5",
+    "svelte-materialify": "^0.3.3",
     "svelte-preprocess": "^4.6.0",
     "svelte-routing": "^1.4.2",
-    "tslib": "^2.0.0",
-    "typescript": "^3.9.3"
+    "tslib": "^2.0.3",
+    "typescript": "^4.0.5"
   },
   "dependencies": {
-    "sirv-cli": "^1.0.0"
+    "sirv-cli": "^1.0.8"
   },
   "browserslist": {
     "production": [

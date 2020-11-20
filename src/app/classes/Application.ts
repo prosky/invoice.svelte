@@ -29,5 +29,14 @@ export default class Application {
         }
     }
 
+    save() {
+        this.storage.save('data', this.data);
+    }
+
+    clear(){
+        this.data = this.factory.invoice();
+        this.save();
+    }
+
 
 }

@@ -13,7 +13,6 @@ addMessages('en-EN', en);
 addMessages('cs-CZ', cs);
 
 application.load();
-
 const basePath = location.pathname.replace('index.html','');
 console.log(location);
 const app = new App({

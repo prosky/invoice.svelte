@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/scss/global.scss"],"names":[],"mappings":"AAAA,UACE,kBACA,WACA,YACA,SACA,U","file":"bundle.css","sourcesContent":["html, body {\r\n  position: relative;\r\n  width: 100%;\r\n  height: 100%;\r\n  margin: 0;\r\n  padding: 0;\r\n}\r\n"],"sourceRoot":""}

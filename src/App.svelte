@@ -16,6 +16,8 @@
 
 <MaterialApp theme={theme}>
     <main>
+        <Home/>
+        <!--
         <Router url="{url}" basepath={basePath}>
             <nav>
                 {#each pages as [to, key]}
@@ -26,6 +28,7 @@
                 <Route {path} {component}/>
             {/each}
         </Router>
+        -->
     </main>
 </MaterialApp>
 
