@@ -20,19 +20,21 @@
         <tbody>
         <tr>
             <th>
-                <TextField bind:value={invoice.labels.subTotal}>{$_(`invoice.subTotal`)}</TextField>
+                <TextField bind:value={invoice.labels.subTotal} placeholder={$_(`invoice.subTotal`)}/>
             </th>
             <td>{money(subTotal)}</td>
         </tr>
         <tr>
             <th>
-                <TextField bind:value={invoice.labels.tax}>{$_(`invoice.tax`)}</TextField>
+                <TextField bind:value={invoice.labels.tax} placeholde={$_(`invoice.tax`)}/>
             </th>
             <td>{money(tax)}</td>
         </tr>
+        </tbody>
+        <tbody class="red">
         <tr>
             <th>
-                <TextField bind:value={invoice.labels.total}>{$_(`invoice.total`)}</TextField>
+                <TextField bind:value={invoice.labels.total} placeholder={$_(`invoice.total`)}/>
             </th>
             <td>{helpers.formatter.format(total)}</td>
         </tr>
@@ -40,14 +42,21 @@
     </table>
 </div>
 <style type="scss">
-  .summary {
-    display: flex;
-    justify-content: flex-end;
-
-    table {
-      min-width: 50%;
+    table{
+        border-collapse: collapse;
+    }
+    table,td,th {
+        border: none;
     }
 
-  }
+    .summary {
+        display: flex;
+        justify-content: flex-end;
+
+        table {
+            min-width: 50%;
+        }
+
+    }
 
 </style>

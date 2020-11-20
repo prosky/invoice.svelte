@@ -1,3 +1,4 @@
+import {deserialize, serialize} from "../utils/serialize";
 
 export interface StorageInterface {
 
@@ -11,11 +12,11 @@ export class LocalStorage implements StorageInterface {
   load(key:string): any | null {
     const data = window.localStorage.getItem(key);
     if (!data) return null;
-    return JSON.parse(data);
+    return deserialize(data);
   }
 
   save(key: string, data: any): void {
-    window.localStorage.setItem(key, JSON.stringify(data));
+    window.localStorage.setItem(key, serialize(data));
   }
 
 }

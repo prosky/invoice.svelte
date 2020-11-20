@@ -59,6 +59,7 @@ export default {
 		}),
         scss({
             output: 'public/build/global.css',
+            sass: require('sass')
         }),
         json(),
 		// If you have external dependencies installed from

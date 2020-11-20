@@ -1,14 +1,3 @@
-<script lang="ts" context="module">
-    import locales from "../app/data/localesList";
-    import {values} from "../app/utils/helpers"
-
-    const format = (val) => {
-        console.log(val);
-        return locales[val];
-    };
-    const items = values(locales);
-</script>
-
 <script lang="ts">
     import {debounce} from 'lodash';
     import {_} from 'svelte-i18n';
@@ -16,9 +5,12 @@
     import Wrapper from "../components/Wrapper/Wrapper.svelte";
     import Document from "../components/Document/Document.svelte";
     import Drawer from "../components/Drawer/Drawer.svelte";
-    import {Col, Container, Row, Select, Switch} from 'svelte-materialify/src';
+    import {Col, Container, Row, Select, Switch, TextField, Button, Icon} from 'svelte-materialify/src';
+    import {mdiTrashCan} from '@mdi/js';
     import {app} from '../app';
     import helpers from '../app/utils/helpers';
+    import CustomSelect from "../components/Inputs/CustomSelect.svelte";
+    import locales from "../app/data/localesList";
 
     $:  invoice = app.data;
 
@@ -49,25 +41,27 @@
     <Drawer/>
     <Wrapper>
         <div class="pt-8 pb-8">
-            <h1 class="text-primary text-h1 text-center mb-10">{$_('page.home.title')}</h1>
-            <nav>
-                <Container>
-                    <Row>
-                        <Col>
-                            <Switch bind:checked={invoice.withVAT}>{$_(`invoice.${invoice.withVAT ? 'withVAT' : 'withoutVAT'}`)}</Switch>
-                        </Col>
-                        <Col><Select {rules} {format} bind:value={invoice.locale}
-                                     {items}>{$_('invoice.locale')}</Select></Col>
-                    </Row>
-                </Container>
-            </nav>
-            <Document {reset}>
+            <h1 class="primary-text text-h1 text-center mb-10">{$_('page.home.title')}</h1>
+            <Row>
+                <Col>
+                    <Switch bind:checked={invoice.withVAT}>{$_(`invoice.${invoice.withVAT ? 'withVAT' : 'withoutVAT'}`)}</Switch>
+                </Col>
+                <Col>
+                    <CustomSelect {rules} bind:value={invoice.locale} items={locales}>{$_('invoice.locale')}</CustomSelect>
+                </Col>
+                <Col>
+                    <TextField bind:value={invoice.dateFormat}>{$_('invoice.dateFormat')}</TextField>
+                </Col>
+            </Row>
+            <Document>
                 <Invoice bind:invoice/>
+                <div slot="nav">
+                    <Button on:click={reset} size="large" fab icon class="red-text" title={$_('buttons.reset')}>
+                        <Icon size="3rem" path={mdiTrashCan}/>
+                    </Button>
+                </div>
             </Document>
         </div>
     </Wrapper>
 </div>
 
-<style type="scss">
-
-</style>

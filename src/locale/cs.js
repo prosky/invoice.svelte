@@ -41,6 +41,8 @@ export default {
         },
         subTotal: "Celková cena bez DPH",
         tax: "DPH",
-        total: "Celková cena s DPH"
+        total: "Celková cena s DPH",
+        withoutVAT: "Neplátce DPH",
+        withVAT: "Plátce DPH"
     }
 }

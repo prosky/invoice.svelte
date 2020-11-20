@@ -54,17 +54,18 @@
         <tr>
             <td>
                 <Textarea rows={1} autogrow bind:value={product.description}
-                          placeholder={$_('invoice.product.description')}/>
+                          placeholder={$_('invoice.product.description')}
+                />
             </td>
             <td>
-                <TextField bind:value={product.quantity}/>
+                <TextField type="number" bind:value={product.quantity}/>
             </td>
             <td>
-                <TextField bind:value={product.price}/>
+                <TextField type="number" bind:value={product.price}/>
             </td>
             {#if invoice.withVAT}
                 <td>
-                    <TextField bind:value={product.taxRate}/>
+                    <TextField type="number" bind:value={product.taxRate}/>
                 </td>
             {/if}
             <td>

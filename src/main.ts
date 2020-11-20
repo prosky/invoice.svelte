@@ -13,14 +13,13 @@ addMessages('en-EN', en);
 addMessages('cs-CZ', cs);
 
 application.load();
+
 const basePath = location.pathname.replace('index.html','');
-
 const app = new App({
-	target: document.body,
-	props: {
+    target: document.body,
+    props: {
         basePath
-		//name: 'world'
-	}
+        //name: 'world'
+    }
 });
-
 export default app;

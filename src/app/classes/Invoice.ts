@@ -47,24 +47,22 @@ const defaultLabels: InvoiceLabels = {
 export interface InvoiceInterface {
     labels: InvoiceLabels
 
+    title: string
+    logo: string
     locale: string
     dateFormat: string
     withVAT: boolean
 
     name: string
-
-    company: Company
     accountNumber: string
     paymentMethod: string
+    company: Company
     client: Company
 
-
-    title: string
-    date: string
-    dueDate: string
+    date: Date
+    dueDate: Date
 
     products: Product[]
-
     currency: string
     notes: string
     term: string
@@ -73,6 +71,7 @@ export interface InvoiceInterface {
 
 export default class Invoice implements InvoiceInterface {
 
+    logo;
 
     labels = defaultLabels;
 
@@ -83,8 +82,8 @@ export default class Invoice implements InvoiceInterface {
     name = '';
     accountNumber = '';
 
-    date = '';
-    dueDate = '';
+    date = new Date();
+    dueDate = new Date();
     products = [];
 
     company: Company;

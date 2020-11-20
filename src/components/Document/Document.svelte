@@ -1,55 +1,68 @@
 <script lang="ts">
     import {_} from 'svelte-i18n';
-    import {Button, Icon} from "svelte-materialify/src";
-    import {mdiTrashCan,mdiFileFind,mdiCloudDownloadOutline  } from '@mdi/js';
+    import {Button, Icon, MaterialApp} from "svelte-materialify/src";
+    import {mdiCloudDownloadOutline, mdiFileFind} from '@mdi/js';
+    import pdfMake from "pdfmake/build/pdfmake";
+    import pdfFonts from "./vfs_fonts";
+    import htmlToPdfmake from "html-to-pdfmake";
+
+    pdfMake.vfs = pdfFonts;
+
     let document: HTMLDivElement;
-    export let reset;
     const downloadPDF = () => {
-        console.log('downloadPDF');
+        console.log(document.innerHTML);
+        pdfMake.createPdf({content: htmlToPdfmake(document.innerHTML)}).download();
     }
     const showPDF = () => {
         console.log('showPDF');
     }
 </script>
 
-<div class="document page white"  bind:this={document}>
-    <aside>
-        <nav>
-            <Button on:click={downloadPDF} size="large" fab  icon class="primary-text" title={$_('buttons.download_pdf')}>
-                <Icon size="3rem" path={mdiCloudDownloadOutline}/>
-            </Button>
-            <Button on:click={showPDF} size="large" fab  icon class="primary-text" title={$_('buttons.show_pdf')}>
-                <Icon size="3rem" path={mdiFileFind}/>
-            </Button>
-            <Button on:click={reset} size="large" fab  icon class="red-text" title={$_('buttons.reset')}>
-                <Icon size="3rem" path={mdiTrashCan}/>
-            </Button>
-        </nav>
-    </aside>
-    <slot/>
-</div>
+    <div class="document page white">
+        <aside>
+            <nav>
+                <Button on:click={downloadPDF} size="large" fab icon class="primary-text"
+                        title={$_('buttons.download_pdf')}>
+                    <Icon size="3rem" path={mdiCloudDownloadOutline}/>
+                </Button>
+                <Button on:click={showPDF} size="large" fab icon class="primary-text" title={$_('buttons.show_pdf')}>
+                    <Icon size="3rem" path={mdiFileFind}/>
+                </Button>
+                <slot name="nav"/>
+            </nav>
+        </aside>
+        <div bind:this={document}>
+            <MaterialApp theme='light'>
+                <slot/>
+            </MaterialApp>
+        </div>
+    </div>
+
 <style type="scss">
-  .document {
-    position: relative;
-  }
+    .document {
+        position: relative;
+    }
 
-  aside {
-    position: absolute;
-    right: 100%;
-    top: 0;
-    margin-right: 1rem;
-  }
+    aside {
+        position: absolute;
+        right: 100%;
+        top: 0;
+        margin-right: 1rem;
+    }
 
-  .page {
-    --theme-text-primary: black;
-    --theme-text-secondary: black;
-    --theme-text-disabled: #5d5d5d;
-    width: 21cm;
-    min-height: 29.7cm;
-    box-sizing: border-box;
-    padding: 1cm;
-    margin: auto;
-    box-shadow: .5rem .5rem 1rem rgba(0, 0, 0, 0.8);
-  }
+    .page {
+        //--theme-text-primary: black;
+        //--theme-text-secondary: black;
+        //--theme-text-disabled: #5d5d5d;
+        width: 21cm;
+        min-height: 29.7cm;
+        box-sizing: border-box;
+        padding: 1cm;
+        margin: auto;
+        box-shadow: .5rem .5rem 1rem rgba(0, 0, 0, 0.8);
+    }
 
+    .s-input input, .s-input textarea {
+        color: black;
+    }
 </style>

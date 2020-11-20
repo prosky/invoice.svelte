@@ -4,8 +4,8 @@
   "private": true,
   "homepage": "https://prosky.github.io/invoice.svelte/",
   "scripts": {
-    "build": "rollup -c",
     "dev": "rollup -c -w",
+    "build": "rollup -c",
     "start": "sirv public",
     "validate": "svelte-check",
     "deploy": "gh-pages -d public"
@@ -19,10 +19,13 @@
     "@tsconfig/svelte": "^1.0.10",
     "@types/jspdf": "^1.3.3",
     "@types/lodash": "^4.14.165",
+    "@types/pdfmake": "^0.1.16",
     "autoprefixer": "^10.0.2",
     "carbon-components-svelte": "^0.22.0",
     "carbon-icons-svelte": "^10.21.0",
+    "date-fns": "^2.16.1",
     "gh-pages": "^3.1.0",
+    "html-to-pdfmake": "^2.1.2",
     "lodash": "^4.17.20",
     "postcss": "^8.1.8",
     "rollup": "^2.33.3",
@@ -31,16 +34,20 @@
     "rollup-plugin-svelte": "^6.1.1",
     "rollup-plugin-terser": "^7.0.2",
     "sass": "^1.29.0",
+    "scss": "^0.2.4",
     "svelte": "^3.29.7",
-    "svelte-check": "^1.1.14",
+    "svelte-check": "^1.1.15",
     "svelte-i18n": "^3.2.5",
     "svelte-materialify": "^0.3.3",
     "svelte-preprocess": "^4.6.0",
     "svelte-routing": "^1.4.2",
+    "ts-interface-builder": "^0.2.2",
+    "ts-interface-checker": "^0.1.13",
     "tslib": "^2.0.3",
-    "typescript": "^4.0.5"
+    "typescript": "^4.1.2"
   },
   "dependencies": {
+    "pdfmake": "^0.1.68",
     "sirv-cli": "^1.0.8"
   },
   "browserslist": {

@@ -6,7 +6,7 @@
 </div>
 <style type="scss">
     .wrapper {
-        width: 1000px;
+        width: 21cm;
         margin: auto;
     }
 </style>

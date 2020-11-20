@@ -5,9 +5,12 @@
     import Summary from "./Summary.svelte";
     import type Invoice from "../../app/classes/Invoice";
     import Products from "./Products.svelte";
+    import DatePicker from "../Inputs/DatePicker/DatePicker.svelte";
 
     export let invoice: Invoice;
 
+    console.log(invoice.date);
+    console.log(invoice.dueDate);
     const downloadPDF = () => {
         console.log('downloadPDF');
     }
@@ -17,7 +20,30 @@
 <div class="invoice">
     <Row class="mb-4">
         <Col>
-            <TextField labelText={$_('invoice.title')} type="text" bind:value={invoice.title}/>
+            <Row>
+                <Col>
+                    <TextField placeholder={$_('invoice.title')} type="text" bind:value={invoice.labels.title}/>
+                </Col>
+                <Col>
+                    <TextField  placeholder={$_('invoice.title')} type="text" bind:value={invoice.title}/>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <TextField placeholder={$_('invoice.date')} type="text" bind:value={invoice.labels.date}/>
+                </Col>
+                <Col>
+                    <DatePicker bind:dateFormat={invoice.dateFormat} placeholder={$_('invoice.date')} type="text" bind:selected={invoice.date}/>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <TextField placeholder={$_('invoice.dueDate')} type="text" bind:value={invoice.labels.dueDate}/>
+                </Col>
+                <Col>
+                    <DatePicker bind:dateFormat={invoice.dateFormat} placeholder={$_('invoice.dueDate')} type="text" bind:selected={invoice.dueDate}/>
+                </Col>
+            </Row>
         </Col>
         <Col>
         </Col>
