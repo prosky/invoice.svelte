@@ -7,6 +7,7 @@ export default class Application {
 
     locale: string;
     dateFormat: string;
+    formatter: Intl.NumberFormat;
 
     factory: DataFactory;
 
@@ -35,7 +36,6 @@ export default class Application {
 
     clear(){
         this.data = this.factory.invoice();
-        this.save();
     }
 
 

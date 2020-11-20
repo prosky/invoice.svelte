@@ -1,10 +1,9 @@
 <script lang="ts">
     import {_} from 'svelte-i18n';
     import {Button, Icon} from "svelte-materialify/src";
-    import {mdiFilePdfOutline,mdiFileFind,mdiCloudDownloadOutline  } from '@mdi/js';
-
+    import {mdiTrashCan,mdiFileFind,mdiCloudDownloadOutline  } from '@mdi/js';
     let document: HTMLDivElement;
-
+    export let reset;
     const downloadPDF = () => {
         console.log('downloadPDF');
     }
@@ -21,6 +20,9 @@
             </Button>
             <Button on:click={showPDF} size="large" fab  icon class="primary-text" title={$_('buttons.show_pdf')}>
                 <Icon size="3rem" path={mdiFileFind}/>
+            </Button>
+            <Button on:click={reset} size="large" fab  icon class="red-text" title={$_('buttons.reset')}>
+                <Icon size="3rem" path={mdiTrashCan}/>
             </Button>
         </nav>
     </aside>

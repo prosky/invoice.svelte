@@ -76,7 +76,7 @@ export default class Invoice implements InvoiceInterface {
 
     labels = defaultLabels;
 
-    locale = '';
+    locale;
     dateFormat: string;
     withVAT = false;
     title = 'INVOICE';

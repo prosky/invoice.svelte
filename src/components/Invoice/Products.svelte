@@ -1,7 +1,7 @@
 <script lang="ts">
 
     import {_} from 'svelte-i18n';
-    import {Button, Icon, TextField,Textarea} from "svelte-materialify/src";
+    import {Button, Icon, Textarea, TextField} from "svelte-materialify/src";
     import type Invoice from "../../app/classes/Invoice";
     import {mdiClose, mdiPlusCircleOutline} from '@mdi/js';
     import app from '../../app';
@@ -16,10 +16,12 @@
         invoice.products = products;
     };
     const handleDelete = (index: number): void => {
-        products.splice(index,1);
+        products.splice(index, 1);
         invoice.products = products;
     };
     const sum = (product: Product): number => calculateTax(invoice, product) + calculatePrice(product);
+
+    const money = (num: number): string => num.toLocaleString(invoice.locale, {minimumFractionDigits: 2});
 
 </script>
 
@@ -51,7 +53,8 @@
     {#each products as product,i}
         <tr>
             <td>
-                <Textarea rows={1} autogrow bind:value={product.description} placeholder={$_('invoice.product.description')}/>
+                <Textarea rows={1} autogrow bind:value={product.description}
+                          placeholder={$_('invoice.product.description')}/>
             </td>
             <td>
                 <TextField bind:value={product.quantity}/>
@@ -65,7 +68,7 @@
                 </td>
             {/if}
             <td>
-                {sum(product)}
+                {money(sum(product))}
             </td>
             <td>
                 <Button on:click={()=>handleDelete(i)} class="red-text" size="small" icon title={$_('buttons.delete')}>

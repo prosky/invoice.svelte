@@ -3,6 +3,7 @@
     import type Invoice from "../../app/classes/Invoice";
     import {TextField} from "svelte-materialify/src";
     import {sumPrice, sumTax} from "../../app/utils/calc";
+    import helpers from '../../app/utils/helpers';
 
     export let invoice: Invoice;
 
@@ -10,6 +11,7 @@
     $: tax = sumTax(invoice);
     $: total = subTotal + tax;
 
+    const money = (num: number): string => num.toLocaleString(invoice.locale, {minimumFractionDigits: 2});
 </script>
 
 
@@ -20,19 +22,19 @@
             <th>
                 <TextField bind:value={invoice.labels.subTotal}>{$_(`invoice.subTotal`)}</TextField>
             </th>
-            <td>{subTotal}</td>
+            <td>{money(subTotal)}</td>
         </tr>
         <tr>
             <th>
                 <TextField bind:value={invoice.labels.tax}>{$_(`invoice.tax`)}</TextField>
             </th>
-            <td>{tax}</td>
+            <td>{money(tax)}</td>
         </tr>
         <tr>
             <th>
                 <TextField bind:value={invoice.labels.total}>{$_(`invoice.total`)}</TextField>
             </th>
-            <td>{total}</td>
+            <td>{helpers.formatter.format(total)}</td>
         </tr>
         </tbody>
     </table>
