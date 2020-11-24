@@ -1,0 +1,1 @@
+export const required = (value) => value ? false : 'This field is required';

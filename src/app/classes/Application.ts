@@ -1,10 +1,12 @@
 import type Invoice from "./Invoice";
 import type {StorageInterface} from "./Storage";
+import type Config from "../Config";
 import DataFactory from "../data/DataFactory";
 
 
 export default class Application {
 
+    config: Config;
     locale: string;
     dateFormat: string;
     formatter: Intl.NumberFormat;
@@ -16,8 +18,9 @@ export default class Application {
     storage: StorageInterface;
 
 
-    constructor(storage: StorageInterface) {
+    constructor(config: Config, storage: StorageInterface) {
         this.storage = storage;
+        this.config = config;
         this.factory = DataFactory.default();
     }
 
@@ -34,8 +37,8 @@ export default class Application {
         this.storage.save('data', this.data);
     }
 
-    clear(){
-        this.data = this.factory.invoice();
+    clear() {
+        return this.data = this.factory.invoice();
     }
 
 

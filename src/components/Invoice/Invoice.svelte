@@ -1,13 +1,15 @@
 <script lang="ts">
     import {_} from 'svelte-i18n';
-    import {Col, Row, TextField} from "svelte-materialify/src";
+    import {Col, Row, TextField,Textarea} from "svelte-materialify/src";
     import Company from "./Company.svelte";
     import Summary from "./Summary.svelte";
     import type Invoice from "../../app/classes/Invoice";
     import Products from "./Products.svelte";
     import DatePicker from "../Inputs/DatePicker/DatePicker.svelte";
+    import {Formatter} from "../../app/types";
 
     export let invoice: Invoice;
+    export let format: Formatter;
 
     console.log(invoice.date);
     console.log(invoice.dueDate);
@@ -60,7 +62,17 @@
         <Products bind:invoice/>
     </div>
     <div>
-        <Summary bind:invoice/>
+        <Summary bind:invoice bind:format/>
+    </div>
+    <div>
+
+        <TextField placeholder={$_('invoice.labels.notes')} type="text" bind:value={invoice.labels.notes}/>
+
+        <Textarea placeholder={$_('invoice.notes')} type="text" bind:value={invoice.notes}/>
+
+        <TextField placeholder={$_('invoice.labels.terms')} type="text" bind:value={invoice.labels.terms}/>
+
+        <Textarea placeholder={$_('invoice.terms')} type="text" bind:value={invoice.term}/>
     </div>
 </div>
 

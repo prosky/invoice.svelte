@@ -1,54 +1,64 @@
 import svelte from 'rollup-plugin-svelte';
+//import svelte from 'rollup-plugin-svelte-hot';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
-import { terser } from 'rollup-plugin-terser';
+import {terser} from 'rollup-plugin-terser';
 import scss from "rollup-plugin-scss";
 import json from "@rollup/plugin-json";
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
+import url from '@rollup/plugin-url';
 
+const watch = !!process.env.ROLLUP_WATCH;
 const production = !process.env.ROLLUP_WATCH;
-
+const hot = !production && watch;
+console.log({hot});
 function serve() {
-	let server;
-	
-	function toExit() {
-		if (server) server.kill(0);
-	}
+    let server;
 
-	return {
-		writeBundle() {
-			if (server) return;
-			server = require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
-				stdio: ['ignore', 'inherit', 'inherit'],
-				shell: true
-			});
+    function toExit() {
+        if (server) server.kill(0);
+    }
 
-			process.on('SIGTERM', toExit);
-			process.on('exit', toExit);
-		}
-	};
+    return {
+        writeBundle() {
+            if (server) return;
+            server = require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
+                stdio: ['ignore', 'inherit', 'inherit'],
+                shell: true
+            });
+
+            process.on('SIGTERM', toExit);
+            process.on('exit', toExit);
+        }
+    };
 }
 
 export default {
-	input: 'src/main.ts',
-	output: {
-		sourcemap: true,
-		format: 'iife',
-		name: 'app',
-		file: 'public/build/bundle.js'
-	},
-	plugins: [
-		svelte({
-			// enable run-time checks when not in production
-			dev: !production,
-			// we'll extract any component CSS out into
-			// a separate file - better for performance
-			css: css => {
-				css.write('bundle.css');
-			},
-			preprocess: sveltePreprocess({
+    input: 'src/main.ts',
+    output: {
+        sourcemap: true,
+        format: 'cjs',
+        name: 'app',
+        file: 'public/build/bundle.js'
+    },
+    plugins: [
+        svelte({
+           /* dev: hot,
+            hot: hot && {
+                injectCss: true,
+                no
+            },*/
+            // enable run-time checks when not in production
+            //dev: !production,
+            // we'll extract any component CSS out into
+            // a separate file - better for performance
+            /*css: css => {
+                css.write('bundle.css');
+            },*/
+            preprocess: sveltePreprocess({
+                sourceMap: true,
                 scss: {
                     includePaths: ['src/scss'],
                 },
@@ -56,40 +66,44 @@ export default {
                     plugins: [require('autoprefixer')],
                 },
             }),
-		}),
+        }),
         scss({
             output: 'public/build/global.css',
             sass: require('sass')
         }),
         json(),
-		// If you have external dependencies installed from
-		// npm, you'll most likely need these plugins. In
-		// some cases you'll need additional configuration -
-		// consult the documentation for details:
-		// https://github.com/rollup/plugins/tree/master/packages/commonjs
-		resolve({
-			browser: true,
-			dedupe: ['svelte']
-		}),
-		commonjs(),
-		typescript({
-			sourceMap: !production,
-			inlineSources: !production
-		}),
+        url({
+            limit: 0,
+            publicPath: 'build/'
+        }),
+        // If you have external dependencies installed from
+        // npm, you'll most likely need these plugins. In
+        // some cases you'll need additional configuration -
+        // consult the documentation for details:
+        // https://github.com/rollup/plugins/tree/master/packages/commonjs
+        resolve({
+            browser: true,
+            dedupe: ['svelte']
+        }),
+        commonjs(),
+        typescript({
+            sourceMap: !production,
+            inlineSources: !production
+        }),
 
-		// In dev mode, call `npm run start` once
-		// the bundle has been generated
-		!production && serve(),
+        // In dev mode, call `npm run start` once
+        // the bundle has been generated
+        !production && serve(),
 
-		// Watch the `public` directory and refresh the
-		// browser on changes when not in production
-		!production && livereload('public'),
+        // Watch the `public` directory and refresh the
+        // browser on changes when not in production
+        !production && livereload('public'),
 
-		// If we're building for production (npm run build
-		// instead of npm run dev), minify
-		production && terser(),
-	],
-	watch: {
-		clearScreen: false
-	}
+        // If we're building for production (npm run build
+        // instead of npm run dev), minify
+        production && terser(),
+    ],
+    watch: {
+        clearScreen: false
+    }
 };

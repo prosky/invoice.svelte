@@ -1,9 +1,7 @@
+export let formatter: Intl.NumberFormat;
+export let format: (number: number) => string;
+export let money: (number: number) => string;
 
-
-interface Helpers {
-    formatter?: Intl.NumberFormat;
+export default {
+    formatter,format,money
 }
-const helpers: Helpers = {
-
-};
-export default helpers;
