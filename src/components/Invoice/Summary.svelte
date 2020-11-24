@@ -7,11 +7,19 @@
 
     export let invoice: Invoice;
 
+    if (!invoice) {
+        throw new Error('Invoice must be specified');
+    }
     $: subTotal = sumPrice(invoice);
     $: tax = sumTax(invoice);
     $: total = subTotal + tax;
 
-    const money = (num: number): string => num.toLocaleString(invoice.locale, {minimumFractionDigits: 2});
+     const money = (num: number, sign: boolean = false): string => {
+        if (sign) {
+            return helpers.formatter.format(num);
+        }
+        return num.toLocaleString(invoice.locale, {minimumFractionDigits: 2})
+    };
 </script>
 
 
@@ -36,27 +44,28 @@
             <th>
                 <TextField bind:value={invoice.labels.total} placeholder={$_(`invoice.total`)}/>
             </th>
-            <td>{helpers.formatter.format(total)}</td>
+            <td>{money(total, true)}</td>
         </tr>
         </tbody>
     </table>
 </div>
 <style type="scss">
-    table{
-        border-collapse: collapse;
-    }
-    table,td,th {
-        border: none;
+  table {
+    border-collapse: collapse;
+  }
+
+  table, td, th {
+    border: none;
+  }
+
+  .summary {
+    display: flex;
+    justify-content: flex-end;
+
+    table {
+      min-width: 50%;
     }
 
-    .summary {
-        display: flex;
-        justify-content: flex-end;
-
-        table {
-            min-width: 50%;
-        }
-
-    }
+  }
 
 </style>

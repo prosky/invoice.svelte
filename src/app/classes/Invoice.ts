@@ -48,7 +48,7 @@ export interface InvoiceInterface {
     labels: InvoiceLabels
 
     title: string
-    logo: string
+    logo?: string
     locale: string
     dateFormat: string
     withVAT: boolean
@@ -68,10 +68,11 @@ export interface InvoiceInterface {
     term: string
 }
 
+const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
 
 export default class Invoice implements InvoiceInterface {
 
-    logo;
+    logo ='';
 
     labels = defaultLabels;
 
@@ -103,5 +104,40 @@ export default class Invoice implements InvoiceInterface {
         this.client = new Company(country);
     }
 
+    assign(data: Record<string, any>) {
+        for (let [prop, value] of Object.entries(data)) {
+            const method = `set` + capitalize(prop);
+            if (typeof this[method] === 'function') {
+                this[method](value);
+            } else if (this.hasOwnProperty(prop)) {
+                this[prop] = value;
+            }
+        }
+    }
 
+    setDate(date: any) {
+        if (typeof date === 'undefined') {
+            throw new Error('Date must be specified');
+        }
+        if (typeof date === 'string') {
+            this.date = new Date(date);
+        }
+        if(!date){
+            date = new Date();
+        }
+        this.date = date;
+    }
+
+    setDueDate(date: any) {
+        if (typeof date === 'undefined') {
+            throw new Error('Date must be specified');
+        }
+        if (typeof date === 'string') {
+            this.dueDate = new Date(date);
+        }
+        if(!date){
+            date = new Date();
+        }
+        this.dueDate = date;
+    }
 }

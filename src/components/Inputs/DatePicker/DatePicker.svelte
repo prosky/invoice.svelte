@@ -4,8 +4,8 @@
     import {createEventDispatcher} from "svelte";
     import {Button, Icon, Menu, TextField} from "svelte-materialify/src";
     import Calender from "./Calender.svelte";
-    import {getMonthName} from "./date-time.js";
     import {mdiArrowLeft, mdiArrowRight} from '@mdi/js';
+    import {getMonthName} from "./date-time";
 
     const dispatch = createEventDispatcher();
 
@@ -53,27 +53,33 @@
         active = false;
         dispatch("datechange", d.detail);
     };
+    const formatter = (date: Date|undefined): string => {
+        if (date && dateFormat) {
+            return format(date, dateFormat);
+        }
+        return '';
+    }
 </script>
 
 <style type="scss">
 
-    .month-name {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        margin: 6px 0;
-    }
+  .month-name {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 6px 0;
+  }
 
-    .center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 </style>
 
 <Menu {active}>
    <span slot="activator">
-       <TextField on:focus={onFocus} value={format(selected,dateFormat)} {...$$restProps}/>
+       <TextField on:focus={onFocus} value={formatter(selected)} {...$$restProps}/>
    </span>
     <div class="box">
         <div class="month-name">
@@ -82,7 +88,8 @@
                     <Icon path={mdiArrowLeft}/>
                 </Button>
             </div>
-            <div class="center">{month} {year}</div>
+            <div class="center">
+                        {getMonthName(month)} {year}</div>
             <div class="center">
                 <Button on:click={next} title={$_('datepicker.buttons.next')} icon class="text-primary">
                     <Icon path={mdiArrowRight}/>

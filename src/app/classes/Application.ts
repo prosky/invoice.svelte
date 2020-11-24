@@ -26,7 +26,7 @@ export default class Application {
         const data = this.storage.load('data');
         this.data = invoice;
         if (data) {
-            Object.assign(this.data, data);
+            this.data.assign(data);
         }
     }
 
@@ -34,8 +34,9 @@ export default class Application {
         this.storage.save('data', this.data);
     }
 
-    clear(){
+    clear() {
         this.data = this.factory.invoice();
+        return this.data;
     }
 
 

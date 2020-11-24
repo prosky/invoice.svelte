@@ -1,40 +1,27 @@
 <script lang="ts">
     import {debounce} from 'lodash';
+    import * as rules from '../app/utils/rules';
     import {_} from 'svelte-i18n';
     import Invoice from "../components/Invoice/Invoice.svelte";
     import Wrapper from "../components/Wrapper/Wrapper.svelte";
     import Document from "../components/Document/Document.svelte";
     import Drawer from "../components/Drawer/Drawer.svelte";
-    import {Col, Container, Row, Select, Switch, TextField, Button, Icon} from 'svelte-materialify/src';
+    import {Button, Col, Icon, Row, Switch, TextField} from 'svelte-materialify/src';
     import {mdiTrashCan} from '@mdi/js';
     import {app} from '../app';
     import helpers from '../app/utils/helpers';
     import CustomSelect from "../components/Inputs/CustomSelect.svelte";
-    import locales from "../app/data/localesList";
+    import locales from "../app/data/locales";
+    import currencies from "../app/data/currencies";
 
-    $:  invoice = app.data;
+    const save = debounce(() => app.save(), 1000);
+    const reset = () => invoice = app.clear();
 
-    const save = debounce((invoice: Invoice) => {
-        app.save();
-    }, 1000);
-    const reset = () => {
-        app.clear();
-        invoice = app.data;
-    }
-    const rules = [
-        (value) => {
-            console.log(value);
-            return value ? false : 'Error Message';
-        },
-    ];
+    let invoice: Invoice;
+    $: invoice = app.data;
+    $: helpers.formatter = new Intl.NumberFormat(invoice.locale, {style: 'currency', currency: invoice.currency});
+    $: save(invoice);
 
-    $: helpers.formatter = new Intl.NumberFormat(invoice.locale, {
-        style: 'currency',
-        currency: invoice.currency
-    });
-    $: {
-        save(invoice);
-    }
 </script>
 
 <div class="content">
@@ -44,13 +31,18 @@
             <h1 class="primary-text text-h1 text-center mb-10">{$_('page.home.title')}</h1>
             <Row>
                 <Col>
-                    <Switch bind:checked={invoice.withVAT}>{$_(`invoice.${invoice.withVAT ? 'withVAT' : 'withoutVAT'}`)}</Switch>
+                    <CustomSelect bind:value={invoice.currency}
+                                  items={currencies}>{$_('invoice.currency')}</CustomSelect>
                 </Col>
                 <Col>
-                    <CustomSelect {rules} bind:value={invoice.locale} items={locales}>{$_('invoice.locale')}</CustomSelect>
+                    <Switch bind:checked={invoice.withVAT}>{$_(`invoice.with${invoice.withVAT ? '' : 'out'}VAT`)}</Switch>
                 </Col>
                 <Col>
-                    <TextField bind:value={invoice.dateFormat}>{$_('invoice.dateFormat')}</TextField>
+                    <CustomSelect bind:value={invoice.locale} items={locales}>{$_('invoice.locale')}</CustomSelect>
+                </Col>
+                <Col>
+                    <TextField rules={[rules.dateFormat]}
+                               bind:value={invoice.dateFormat}>{$_('invoice.dateFormat')}</TextField>
                 </Col>
             </Row>
             <Document>

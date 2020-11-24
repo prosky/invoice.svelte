@@ -16,5 +16,5 @@
     <TextField autocomplete="address-line2" bind:value={company.address2}>{$_(`company.address2`)}</TextField>
     <TextField autocomplete="company-identification-number" bind:value={company.cin}>{$_(`company.cin`)}</TextField>
     <TextField autocomplete="tax-identification-number" bind:value={company.tin}>{$_(`company.tin`)}</TextField>
-    <CustomSelect required={true}  bind:value={company.country} items={countries}>{$_(`company.country`)}</CustomSelect>
+    <CustomSelect bind:value={company.country} items={countries}>{$_(`company.country`)}</CustomSelect>
 </div>
