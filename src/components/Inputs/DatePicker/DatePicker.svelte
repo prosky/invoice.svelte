@@ -2,7 +2,7 @@
     import {_} from 'svelte-i18n'
     import {format} from 'date-fns';
     import {createEventDispatcher} from "svelte";
-    import {Button, Icon, Menu, TextField} from "svelte-materialify/src";
+    import {Button, Icon, Menu, TextField} from "svelte-materialify";
     import Calender from "./Calender.svelte";
     import {mdiArrowLeft, mdiArrowRight} from '@mdi/js';
     import {getMonthName} from "./date-time";

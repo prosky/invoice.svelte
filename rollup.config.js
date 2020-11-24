@@ -1,4 +1,5 @@
 import svelte from 'rollup-plugin-svelte';
+//import svelte from 'rollup-plugin-svelte-hot';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
@@ -7,31 +8,32 @@ import scss from "rollup-plugin-scss";
 import json from "@rollup/plugin-json";
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
-import hmr from 'rollup-plugin-hot';
-//import serve from 'rollup-plugin-serve';
-//import html from 'rollup-plugin-html';
+import url from '@rollup/plugin-url';
+import postcss from 'rollup-plugin-postcss'
 
+const watch = !!process.env.ROLLUP_WATCH;
 const production = !process.env.ROLLUP_WATCH;
-
+const hot = !production && watch;
+console.log({hot});
 function serve() {
-	let server;
-	
-	function toExit() {
-		if (server) server.kill(0);
-	}
+    let server;
 
-	return {
-		writeBundle() {
-			if (server) return;
-			server = require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
-				stdio: ['ignore', 'inherit', 'inherit'],
-				shell: true
-			});
+    function toExit() {
+        if (server) server.kill(0);
+    }
 
-			process.on('SIGTERM', toExit);
-			process.on('exit', toExit);
-		}
-	};
+    return {
+        writeBundle() {
+            if (server) return;
+            server = require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
+                stdio: ['ignore', 'inherit', 'inherit'],
+                shell: true
+            });
+
+            process.on('SIGTERM', toExit);
+            process.on('exit', toExit);
+        }
+    };
 }
 
 export default {
@@ -44,14 +46,21 @@ export default {
     },
     plugins: [
         svelte({
+           /* dev: hot,
+            hot: hot && {
+                injectCss: true,
+                no
+            },*/
             // enable run-time checks when not in production
-            dev: !production,
+            //dev: !production,
             // we'll extract any component CSS out into
             // a separate file - better for performance
-            css: css => {
+            /*css: css => {
                 css.write('bundle.css');
-            },
+            },*/
+            emitCss: true,
             preprocess: sveltePreprocess({
+                sourceMap: true,
                 scss: {
                     includePaths: ['src/scss'],
                 },
@@ -64,8 +73,15 @@ export default {
             output: 'public/build/global.css',
             sass: require('sass')
         }),
-        //html(),
+        postcss({
+            extract: true,
+            sourceMap: true,
+        }),
         json(),
+        url({
+            limit: 0,
+            publicPath: 'build/'
+        }),
         // If you have external dependencies installed from
         // npm, you'll most likely need these plugins. In
         // some cases you'll need additional configuration -
@@ -92,12 +108,6 @@ export default {
         // If we're building for production (npm run build
         // instead of npm run dev), minify
         production && terser(),
-       /* !production && hmr({
-            open: 'default',
-            public: 'public',
-            baseUrl: '/',
-            inMemory: true,
-        })*/
     ],
     watch: {
         clearScreen: false

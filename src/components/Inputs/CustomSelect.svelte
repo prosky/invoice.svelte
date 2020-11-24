@@ -1,18 +1,25 @@
 <script lang="ts">
-    import {Select} from "svelte-materialify/src";
+    import {Select} from "svelte-materialify";
+    import * as rules from "../../app/utils/rules";
 
-    export let items: Record<string, any>;
-    export let format = (val) => items[val];
-    export let value: any;
+    type T = unknown;
 
-    let tempVal: any = value;
-    const reset = () => tempVal = value;
-    const getValue = (newVal: any) => newVal === null ? reset() : newVal;
+    export let items: Record<string, T>;
+    export let value: T = undefined;
+    export let required: boolean = false;
+
+    let val: T = value;
+    const reset = () => val = value;
+    const getValue = (newVal: T) => {
+        if (required && !newVal) return reset();
+        return newVal;
+    }
     const values = (obj: object) => Object.entries(obj).map(([value, name]) => ({value, name}));
-    $: value = getValue(tempVal);
+    const format = (val) => items[val];
+    $: value = getValue(val);
 </script>
 
 
-<Select bind:value={tempVal} {format} items={values(items)} {...$$restProps}>
+<Select {rules} bind:value={val} {format} items={values(items)} {...$$restProps}>
     <slot/>
 </Select>

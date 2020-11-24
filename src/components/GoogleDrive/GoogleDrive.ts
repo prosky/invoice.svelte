@@ -1,56 +1,70 @@
-// @ts-ignore
-import {config} from "dotenv";
-import GoogleAuth = gapi.auth2.GoogleAuth;
+/**
+ * Print files.
+ */
+import {serialize} from "../../app/utils/serialize";
+import type {GoogleFileMeta} from "../../app/types";
 
-config(); // I just don't like mixing import and require
-const DISCOVERY_DOCS = [
-    "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest",
-];
-
-const SCOPES = 'https://www.googleapis.com/auth/drive.file';
-const API_KEY = 'AIzaSyA1eIPh_ZCVZ0WWJXdFioYt5FOD3xkb2Ow';
-const CLIENT_ID = '577456712255-k39mpm5tvl8amvfet8e53ebe1vjsjpuo.apps.googleusercontent.com';
-
-
-export default class GoogleDrive {
-
-    gapi: any;
-
-    auth: GoogleAuth;
-    initialized: boolean = false;
+export const listFiles = async (searchTerm: string | null = null): Promise<GoogleFileMeta[]> => {
+    const response: gapi.client.Response<gapi.client.drive.FileList> = await gapi.client.drive.files.list({
+        pageSize: 10,
+        fields: 'nextPageToken, files(id, name, mimeType, modifiedTime, webContentLink)',
+        q: searchTerm,
+    });
+    return <GoogleFileMeta[]>response.result;
+};
 
 
-    constructor(gapi) {
-        console.log(gapi);
-        this.gapi = gapi;
-    }
+export const upload = async (fileName: string, data: object) => {
+    const jsonData = serialize(data);
+    const boundary = 'foo_bar_baz'
+    const delimiter = "\r\n--" + boundary + "\r\n";
+    const close_delim = "\r\n--" + boundary + "--";
+    let fileData = jsonData;
+    let contentType = 'application/json';
+    let metadata = {
+        'name': fileName,
+        'mimeType': contentType
+    };
+    let multipartRequestBody =
+        delimiter +
+        'Content-Type: application/json; charset=UTF-8\r\n\r\n' +
+        JSON.stringify(metadata) +
+        delimiter +
+        'Content-Type: ' + contentType + '\r\n\r\n' +
+        fileData + '\r\n' +
+        close_delim;
+    await gapi.client.request({
+        'path': 'https://www.googleapis.com/upload/drive/v3/files',
+        'method': 'POST',
+        'params': {'uploadType': 'multipart'},
+        'headers': {
+            'Content-Type': 'multipart/related; boundary=' + boundary + ''
+        },
+        'body': multipartRequestBody
+    });
+}
 
-    async initClient(options: { updateLoggedInStatus: (status: boolean) => void }) {
-        if (this.initialized) {
-            return;
+
+export const download = async (url: string): Promise<object> => {
+    const response = await fetch(url, {
+        method: 'GET',
+        credentials: 'omit',
+        headers: {
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': '*'
         }
-        this.initialized = true;
-        try {
-            await this.gapi.client.init({
-                apiKey: API_KEY,
-                clientId: CLIENT_ID,
-                discoveryDocs: DISCOVERY_DOCS,
-                scope: SCOPES,
-            });
-            // Listen for sign-in state changes.
-            this.gapi.auth2
-                .getAuthInstance()
-                .isSignedIn.listen(options.updateLoggedInStatus);
+    });
+    console.log(response);
+    return response.json();
+};
 
-            // Handle the initial sign-in state.
-            options.updateLoggedInStatus(
-                this.gapi.auth2.getAuthInstance().isSignedIn.get()
-            );
-        } catch (err) {
-            console.error("Caught error", err);
-        }
-    }
-
-
-
+export const getMeta = async (record: GoogleFileMeta): Promise<gapi.client.drive.File> => {
+    const request = await gapi.client.drive.files.get({fileId: record.id});
+    const file = request.result;
+    console.log(request);
+    console.log(request.result);
+    console.log('Title: ' + file.name);
+    console.log('Description: ' + file.description);
+    console.log('MIME type: ' + file.mimeType);
+    return file;
 }

@@ -1,83 +1,126 @@
-<script type="ts">
-    import {createEventDispatcher, onMount} from 'svelte'
-    import loader from '@beyonk/async-script-loader'
+<script lang="ts">
+    import {createEventDispatcher, onMount} from 'svelte';
+    import {Button, ProgressCircular} from 'svelte-materialify';
+    import loader from '@beyonk/async-script-loader';
+    import googleDriveIcon from './google-drive.svg';
+    import ClientConfig = gapi.auth2.ClientConfig;
+    import GoogleUser = gapi.auth2.GoogleUser;
+    import SigninOptions = gapi.auth2.SigninOptions;
 
-    const SCOPES = 'https://www.googleapis.com/auth/drive.file';
-    const API_KEY = 'AIzaSyA1eIPh_ZCVZ0WWJXdFioYt5FOD3xkb2Ow';
-    const CLIENT_ID = '577456712255-k39mpm5tvl8amvfet8e53ebe1vjsjpuo.apps.googleusercontent.com';
-
-    const dispatch = createEventDispatcher();
-
-    export let clientId = CLIENT_ID;
+    export let config: ClientConfig;
     export let text = 'Sign in with Google';
 
-    let signinCta;
-    let disabled = true;
-    let GoogleAuth
+    const dispatch = createEventDispatcher();
+    let googleAuth: gapi.auth2.GoogleAuth;
+    let disabled: boolean = true;
+    let loading: boolean = false;
+    let signedIn: boolean = false;
 
     onMount(() => {
+        loading = true;
         loader(
-            [{type: 'script',url: '//apis.google.com/js/api:client.js'}],
-            () => window['gapi'],
-            () => initialise()
+                [{url: 'https://apis.google.com/js/platform.js', type: 'script'}],
+                () => window['gapi'],
+                () => initialise()
         )
     })
 
     function initialise() {
-        gapi.load('auth2', async () => {
-            GoogleAuth = gapi.auth2.init({client_id: clientId})
-            GoogleAuth.then(attachHandler, handleInitialisationError)
+        gapi.load('client:auth2', async () => {
+            try {
+                await gapi.client.init(config);
+                googleAuth = gapi.auth2.getAuthInstance();
+                googleAuth.isSignedIn.listen(updateSignInStatus);
+                updateSignInStatus(googleAuth.isSignedIn.get());
+                disabled = false;
+                loading = false;
+            } catch (e) {
+                console.error(e);
+            }
         })
     }
 
-    function attachHandler() {
-        GoogleAuth.attachClickHandler(signinCta, {},
-            () => dispatch('auth-success', {user: GoogleAuth.currentUser.get()}),
-            e => dispatch('auth-failure', {error: e})
-        )
-        disabled = false
+    function updateSignInStatus(isSignedIn: boolean) {
+        signedIn = isSignedIn;
+        dispatch('sign', {isSignedIn});
+        if (isSignedIn) {
+            const user: GoogleUser = googleAuth.currentUser.get();
+            dispatch('sign-in', {user});
+        } else {
+            dispatch('sign-out');
+        }
     }
 
     function handleInitialisationError(e) {
-        console.error('gauth initialisation error', e)
-        dispatch('init-error', {error: e})
+        console.error('gauth initialisation error', e);
+        dispatch('init-error', {error: e});
+    }
+
+    const onClick = () => {
+        signIn()
+    }
+
+    async function signIn(options?: SigninOptions) {
+        try {
+            await googleAuth.signIn(options);
+        } catch (error) {
+            if (error.error === 'popup_blocked_by_browser') {
+                await signIn({ux_mode: 'redirect'});
+            } else {
+                dispatch('sign-error', {error});
+            }
+        }
+    }
+
+    const onSignOutClick = () => {
+        googleAuth.signOut();
     }
 </script>
-<style>
-    button.google-auth {
-        width: 100%;
-        border: 0;
-        background-color: #4285F4;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 2px;
-        padding: 5px 1px;
-        cursor: pointer;
-    }
 
-    button.google-auth:disabled {
-        background-color: grey;
-    }
+<Button tile {disabled} on:click={onClick} class="google-auth">
+    {#if loading}
+        <ProgressCircular size={50} indeterminate color="primary"/>
+    {:else}
+        <img src={googleDriveIcon} alt="Google"/>
+    {/if}
+    <span>{text}</span>
+</Button>
 
-    .google-auth img {
-        background: white;
-        padding: 4px;
-        height: 30px;
-        width: 30px;
-        border-radius: 2px;
-        margin: 4px;
-    }
 
-    .google-auth span {
-        font-family: Roboto, sans-serif;
-        font-size: 14px;
-        font-weight: bold;
-        padding: 0 12px;
-        color: white;
+<style type="scss">
+    :global {
+        button.google-auth {
+            width: 100%;
+            border: 0;
+            background-color: #4285F4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 2px;
+            padding: 5px 1px;
+            cursor: pointer;
+
+            &:disabled {
+                background-color: grey;
+            }
+
+            img {
+                background: white;
+                padding: 4px;
+                height: 30px;
+                width: 30px;
+                border-radius: 2px;
+                margin: 4px;
+            }
+
+            span {
+                font-family: Roboto, sans-serif;
+                font-size: 14px;
+                font-weight: bold;
+                padding: 0 12px;
+                color: white;
+            }
+        }
     }
 </style>
-<button bind:this={signinCta} {disabled} class="google-auth">
-    <img src='./images/google-drive.svg' alt="Google"/>
-    <span>{text}</span>
-</button>
+

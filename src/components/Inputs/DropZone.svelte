@@ -1,35 +1,30 @@
-<script type="ts" context="module">
+<script lang="ts" context="module">
     let i = 0;
     const uuid = () => `dropzone-${i++}`
 </script>
 
-<script type="ts">
-    import Dropzone from 'dropzone';
+<script lang="ts">
+    import Dropzone, {DropzoneOptions} from 'dropzone';
     import {onMount} from "svelte";
 
     Dropzone.autoDiscover = false;
 
-    export let events: [[string,Function]] = [];
-    export let options = {previewTemplate: "<div/>"};
+    type Event = [string, Function];
+    export let events: Event[] = [];
+    export let options: DropzoneOptions = {};
     export let dropzoneClass = "dropzone";
     export let hooveringClass = "dropzone-hoovering";
     export let id = uuid();
-    export let autoDiscover = false;
 
     let dropzoneElement: HTMLDivElement;
 
+
     onMount(() => {
         options.url = '#';
-        if (!options.previewTemplate) {
-            options.previewTemplate = "<div/>";
-        }
-        if (!options.dictDefaultMessage) {
-            options.dictDefaultMessage = "";
-        }
+        options.previewTemplate = options.previewTemplate || "<div/>";
+        options.dictDefaultMessage = options.dictDefaultMessage || "";
+
         const svDropzone = new Dropzone(`div#${dropzoneElement.id}`, {...options});
-        if (autoDiscover !== true) {
-            svDropzone.autoDiscover = false;
-        }
 
         svDropzone.on("addedfile", f => {
             dropzoneElement.classList.remove(hooveringClass);
@@ -42,9 +37,6 @@
             dropzoneElement.classList.toggle(hooveringClass);
         });
         events.forEach(([eventKey, eventFunc]) => svDropzone.on(eventKey, eventFunc));
-        if (options.clickable !== false) {
-            dropzoneElement.style.cursor = "pointer";
-        }
         svDropzone.on("error", (file, errorMessage) => {
             console.log(`Error: ${errorMessage}`);
         });
@@ -52,17 +44,19 @@
 </script>
 
 <style type="scss">
+  @import "../src/scss/material-theme";
   .dropzone {
     height: 100%;
     display: flex;
     justify-content: center;
     flex-grow: 1;
     align-items: center;
-    transition: all 300ms ease-out;
+    transition: outline-color 300ms ease-out;
+    outline: 2px solid transparent;
   }
 
   .dropzone.dropzone-hoovering {
-    border: 2px solid #ff3e00;
+    outline-color: $primary-color;
     background: rgba(255, 62, 0, 0.05);
   }
 

@@ -1,7 +1,9 @@
 import dateFormats from "./dateFormats";
-import {defaultCurrencies} from "./currencies";
+import {currencies} from "./currencies";
 import Invoice from "../classes/Invoice";
 import Product from "../classes/Product";
+import {getLocaleFromNavigator} from "svelte-i18n";
+import countries from "./countries";
 
 
 const DEFAULT_LOCALE = 'en-EN';
@@ -22,11 +24,12 @@ export default class DataFactory {
     }
 
     static default(): DataFactory {
+
         const locale = navigator.language || DEFAULT_LOCALE;
-        const dateFormat = dateFormats[locale] || dateFormats[DEFAULT_LOCALE];
-        const [, country] = locale.split('-');
-        const currency = defaultCurrencies[country];
-        return new DataFactory(locale, dateFormat,  country, currency);
+        const dateFormat = dateFormats[locale] || dateFormats[DEFAULT_LOCALE] || Object.keys(dateFormats)[0];
+        const [, country] = locale.split('-') || Object.keys(countries)[0];
+        const currency = currencies[country] || Object.keys(currencies)[0];
+        return new DataFactory(locale, dateFormat, country, currency);
     }
 
     invoice = (): Invoice => new Invoice(this.country, this.currency, this.locale, this.dateFormat)

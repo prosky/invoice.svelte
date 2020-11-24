@@ -1,6 +1,6 @@
 import './scss/global.scss';
 import App from './App.svelte';
-import {app as application} from './app';
+import context from './app/Context';
 import {addMessages,init,getLocaleFromNavigator} from 'svelte-i18n';
 import cs from './locale/cs.js';
 import en from './locale/en.js';
@@ -12,14 +12,11 @@ init({
 addMessages('en-EN', en);
 addMessages('cs-CZ', cs);
 
-application.load();
+context.load();
 
-const basePath = location.pathname.replace('index.html','');
+//const basePath = location.pathname.replace('index.html','');
 const app = new App({
     target: document.body,
-    props: {
-        basePath
-        //name: 'world'
-    }
+    props: {}
 });
 export default app;

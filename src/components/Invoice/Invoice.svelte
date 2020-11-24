@@ -1,15 +1,16 @@
 <script lang="ts">
     import {_} from 'svelte-i18n';
-    import {Col, Row, Textarea, TextField} from "svelte-materialify/src";
+    import {Col, Row, TextField, Textarea} from "svelte-materialify";
     import Company from "./Company.svelte";
     import Summary from "./Summary.svelte";
     import type Invoice from "../../app/classes/Invoice";
     import Products from "./Products.svelte";
     import DatePicker from "../Inputs/DatePicker/DatePicker.svelte";
-    import ImagePicker from "../Inputs/ImagePicker.svelte";
+    import {Formatter} from "../../app/types";
+    import ImagePicker from "../Inputs/ImagePicker/ImagePicker.svelte";
 
     export let invoice: Invoice;
-
+    export let format: Formatter;
     const downloadPDF = () => {
         console.log('downloadPDF');
     }
@@ -62,7 +63,7 @@
         <Products bind:invoice/>
     </div>
     <div class="mb-6">
-        <Summary bind:invoice/>
+        <Summary bind:invoice bind:format/>
     </div>
     <div class="mb-6">
         <TextField placeholder={$_('invoice.terms')} bind:value={invoice.labels.notes}/>
@@ -71,9 +72,8 @@
     <div>
         <TextField placeholder={$_('invoice.terms')} bind:value={invoice.labels.terms}/>
         <Textarea placeholder={$_('invoice.term')} bind:value={invoice.term} rows={3}/>
-    </div>
 </div>
-
+</div>
 <style type="scss">
   .invoice {
     position: relative;

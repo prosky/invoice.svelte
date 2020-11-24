@@ -1,8 +1,8 @@
 <script>
-    import {Button, Icon, NavigationDrawer, Overlay,} from 'svelte-materialify/src';
+    import {Button, Icon, NavigationDrawer, Overlay,} from 'svelte-materialify';
     import {mdiGoogleDrive} from '@mdi/js';
-
-    let active = false;
+    import GoogleDrive from "../GoogleDrive/GoogleDrive.svelte";
+    export let active = false;
     close = () => {
         active = false
     };
@@ -16,13 +16,13 @@
         <Icon path={mdiGoogleDrive} size="3rem"/>
     </Button>
     <NavigationDrawer fixed {active}>
-
+        <GoogleDrive/>
     </NavigationDrawer>
     <Overlay index={1} {active} on:click={close}/>
 </div>
 
 <style type="scss">
-  .drawer {
-    position: fixed;
-  }
+    .drawer {
+        position: fixed;
+    }
 </style>
