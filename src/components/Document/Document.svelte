@@ -12,7 +12,6 @@
     import Invoice from "../Invoice/Invoice.svelte";
     import app from '../../app/Context';
     import counter from "../../app/saveStore";
-    import Debugger from "../Debugger.svelte";
     import {Formatter} from "../../app/types";
 
     pdfMake.vfs = pdfFonts;
@@ -31,12 +30,14 @@
     let money: (num: number) => string;
     let formatter: Intl.NumberFormat;
     let currency: string = null, locale: string = null;
-
-    $: invoice && (save() || counter.increment());
+    $: if (invoice) {
+        save();
+        counter.increment();
+    }
     $: if (currency !== invoice.currency || locale !== invoice.locale) {
         currency = invoice.currency;
         locale = invoice.locale;
-        console.log(currency,locale);
+        console.log(currency, locale);
         formatter = new Intl.NumberFormat(locale, {style: 'currency', currency: currency});
         format = (number: number, sign: boolean = false) => {
             if (sign) return formatter.format(number);
@@ -46,12 +47,10 @@
     const reset = () => {
         invoice.update(() => app.clear());
     }
+
 </script>
 
 <div>
-    <Debugger>
-        {$counter}
-    </Debugger>
     <Row>
         <Col>
             <CustomSelect required bind:value={invoice.currency}

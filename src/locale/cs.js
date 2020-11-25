@@ -45,5 +45,15 @@ export default {
         taxRate: "Daňová sazba",
         withoutVAT: "Neplátce DPH",
         withVAT: "Plátce DPH"
+    },
+    files:{
+        name: "Název",
+        modifiedTime: "Upraveno",
+
+    },
+    google:{
+        signIn: 'Sign in with Google',
+        signOut: 'Odhlásit',
     }
+
 }

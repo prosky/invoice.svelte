@@ -1,6 +1,7 @@
 import svelte from 'rollup-plugin-svelte';
 //import svelte from 'rollup-plugin-svelte-hot';
 import resolve from '@rollup/plugin-node-resolve';
+import path from 'path';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import {terser} from 'rollup-plugin-terser';
@@ -9,7 +10,13 @@ import json from "@rollup/plugin-json";
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import url from '@rollup/plugin-url';
-import postcss from 'rollup-plugin-postcss'
+import postcss from 'rollup-plugin-postcss';
+import alias from '@rollup/plugin-alias';
+
+const ROOT_DIR = __dirname;
+const SRC_DIR = path.resolve(ROOT_DIR, 'src');
+const PUBLIC_DIR = path.resolve(ROOT_DIR, 'public');
+
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -43,12 +50,20 @@ export default {
         file: 'public/build/bundle.js'
     },
     plugins: [
+        alias({
+            resolve: ['.svelte', '.ts'],
+            entries: [
+                {find: '@src', replacement: SRC_DIR},
+                {find: '@app', replacement: path.resolve(SRC_DIR, 'app')},
+                {find: '@components', replacement: path.resolve(SRC_DIR, 'components')},
+            ],
+        }),
         svelte({
-           /* dev: hot,
-            hot: hot && {
-                injectCss: true,
-                no
-            },*/
+            /* dev: hot,
+             hot: hot && {
+                 injectCss: true,
+                 no
+             },*/
             // enable run-time checks when not in production
             //dev: !production,
             // we'll extract any component CSS out into

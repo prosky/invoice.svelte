@@ -17,6 +17,8 @@ context.load();
 //const basePath = location.pathname.replace('index.html','');
 const app = new App({
     target: document.body,
-    props: {}
+    props: {
+
+    }
 });
 export default app;

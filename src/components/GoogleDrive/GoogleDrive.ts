@@ -3,9 +3,10 @@
  */
 import {serialize} from "../../app/utils/serialize";
 import type {GoogleFileMeta} from "../../app/types";
+import {info} from "../Flashes/flashesStore";
 
 export const listFiles = async (searchTerm: string | null = null): Promise<GoogleFileMeta[]> => {
-    console.log(searchTerm);
+    info(`searching ${searchTerm}`);
     const response: gapi.client.Response<gapi.client.drive.FileList> = await gapi.client.drive.files.list({
         pageSize: 10,
         fields: 'nextPageToken, files(id, name, mimeType, modifiedTime, webContentLink)',
@@ -47,9 +48,9 @@ export const upload = async (fileName: string, data: object) => {
 
 
 export const download = async (url: string): Promise<object> => {
+
     const response = await fetch(url, {
         method: 'GET',
-        credentials: 'omit',
         headers: {
             'Accept': 'application/json',
             'Access-Control-Allow-Origin': '*'
