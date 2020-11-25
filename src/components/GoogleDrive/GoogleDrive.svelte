@@ -83,7 +83,7 @@
             <tbody>
             {#each $files as file}
                 <tr>
-                    <td>{file.name}</td>{@debug context.dateFormat}
+                    <td>{file.name}</td>
                     <td>{format(parseISO(file.modifiedTime), context.dateFormat)}</td>
                     <td>
                         <Button on:click={()=>download(file)}>

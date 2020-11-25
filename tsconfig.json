@@ -5,7 +5,7 @@
   "exclude": ["node_modules/*", "__sapper__/*", "public/*"],
   "compilerOptions": {
     "types": [
-      "svelte","gapi","gapi.auth2","gapi.client.drive","gapi.client","svelte-materialify","date-fns"
+      "svelte","gapi","gapi.auth2","gapi.client.drive","gapi.client"
     ]
   }
 }

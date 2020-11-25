@@ -11,10 +11,8 @@ import typescript from '@rollup/plugin-typescript';
 import url from '@rollup/plugin-url';
 import postcss from 'rollup-plugin-postcss'
 
-const watch = !!process.env.ROLLUP_WATCH;
 const production = !process.env.ROLLUP_WATCH;
-const hot = !production && watch;
-console.log({hot});
+
 function serve() {
     let server;
 
@@ -60,7 +58,6 @@ export default {
             },*/
             emitCss: true,
             preprocess: sveltePreprocess({
-                sourceMap: true,
                 scss: {
                     includePaths: ['src/scss'],
                 },
