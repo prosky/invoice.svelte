@@ -29,7 +29,7 @@
         scope: SCOPES,
         fetch_basic_profile: true,
     }
-    const delaySearch = debounce<(string) => void>((q) => update(q), 500)   ;
+    const delaySearch = debounce<(string) => void>((q) => update(q), 500);
     const onSearch = () => delaySearch(search);
     const onSignIn = async (event: CustomEvent) => {
         user = event.detail.user;
@@ -56,6 +56,20 @@
     const download = async (file: GoogleFileMeta) => {
         const json = await GoogleDrive.download(file.webContentLink);
         console.log(json);
+    }
+
+    const formatTextDate = (text: string, dateFormat: string) => {
+       let date:Date;
+        try{
+            date = parseISO(text);
+        }catch (e){
+            return '';
+        }
+        try{
+            return format(date, context.dateFormat)
+        }catch (e) {
+            return format(date, 'd. M. yyyy')
+        }
     }
 
 </script>

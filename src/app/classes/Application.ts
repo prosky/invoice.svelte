@@ -7,14 +7,12 @@ import DataFactory from "../data/DataFactory";
 export default class Application {
 
     config: Config;
+
     locale: string;
     dateFormat: string;
-    formatter: Intl.NumberFormat;
 
     factory: DataFactory;
-
     data: Invoice;
-
     storage: StorageInterface;
 
 
