@@ -12,7 +12,7 @@
 </script>
 
 <div class="drawer">
-    <Button class="primary-text ma-4" icon size="large" on:click={open}>
+    <Button class="drawer-button primary-text ma-4" icon size="large" on:click={open}>
         <Icon path={mdiGoogleDrive} size="3rem"/>
     </Button>
     <NavigationDrawer fixed {active}>
@@ -24,5 +24,7 @@
 <style type="scss">
     .drawer {
         position: fixed;
+        top: 0;
+        left: 0;
     }
 </style>
