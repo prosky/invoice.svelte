@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
     import {_} from 'svelte-i18n'
     import {format} from 'date-fns';
     import {createEventDispatcher} from "svelte";

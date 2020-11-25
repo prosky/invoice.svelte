@@ -1,10 +1,10 @@
 <script lang="ts">
-    import {Alert, Icon} from 'svelte-materialify';
+    import {Alert, Icon} from 'svelte-materialify/src';
     import flashes from './flashesStore';
 </script>
 
 <div class="flashes">
-    {#each $flashes as message, i}
+    {#each $flashes as message }
         <Alert transitionOpts={{ duration: 250 }} dismissible on:dissmiss={()=>flashes.remove(message)}
                class={`${message.type}-text`} text dense>
             {message.message}

@@ -31,7 +31,6 @@
     let money: (num: number) => string;
     let formatter: Intl.NumberFormat;
     let currency: string = null, locale: string = null;
-    console.log(invoice);
 
     $: invoice && (save() || counter.increment());
     $: if (currency !== invoice.currency || locale !== invoice.locale) {

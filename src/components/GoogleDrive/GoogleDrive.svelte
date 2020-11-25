@@ -1,20 +1,26 @@
 <script lang="ts">
     import {_} from "svelte-i18n";
+    import {debounce} from 'lodash';
+    import {format, parseISO} from "date-fns";
     import GoogleAuth from "./GoogleAuth.svelte";
-    import {config as appConfig} from "../../app/Context";
+    import context, {config as appConfig} from "../../app/Context";
     import * as GoogleDrive from "./GoogleDrive";
     import {GoogleFileMeta} from "../../app/types";
+    import {Writable, writable} from "svelte/store";
+    import {Button, TextField} from "svelte-materialify";
+    import {error, info} from "../Flashes/flashesStore";
     import GoogleUser = gapi.auth2.GoogleUser;
     import BasicProfile = gapi.auth2.BasicProfile;
+
+    console.log(format, parseISO);
 
     const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
     const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
     let user: GoogleUser = null;
     let profile: BasicProfile = null;
-    let files: GoogleFileMeta[] = [];
-
-    $: files = [];
+    let files: Writable<GoogleFileMeta[]> = writable<GoogleFileMeta[]>([]);
+    let search: string;
 
     let config = {
         clientId: appConfig.googleClientId,
@@ -23,13 +29,25 @@
         scope: SCOPES,
         fetch_basic_profile: true,
     }
-
+    const delaySearch = debounce<(string) => void>((q) => update(q), 500)   ;
+    const onSearch = () => delaySearch(search);
     const onSignIn = async (event: CustomEvent) => {
         user = event.detail.user;
         profile = user.getBasicProfile();
-        files = await GoogleDrive.listFiles();
-        console.log(files);
+        await update();
     }
+
+    const update = async (searchTerm?: string) => {
+        try {
+            let newFiles = await GoogleDrive.listFiles(searchTerm);
+            files.update(() => newFiles);
+            console.log(newFiles);
+            info(`${newFiles.length}`);
+        } catch (e) {
+            error(e);
+        }
+    }
+
     const onSignOut = (event: CustomEvent) => {
         user = null;
         profile = null;
@@ -50,14 +68,23 @@
             {profile.getFamilyName()}
             {profile.getEmail()}
         </div>
+        <Button on:click={update}>{$_('buttons.update')}</Button>
+        <TextField bind:value={search} on:change={onSearch}>
+            {$_('search')}
+        </TextField>
         <table>
+            <thead>
+            <tr>
+                <th>{$_('files.name')}</th>
+                <th>{$_('files.modifiedTime')}</th>
+                <td></td>
+            </tr>
+            </thead>
             <tbody>
-            {#each files as file (file.id)}
+            {#each $files as file}
                 <tr>
-                    <td>{file.id}</td>
-                    <td>{file.name}</td>
-                    <td>{file.modifiedTime}</td>
-                    <td>{file.mimeType}</td>
+                    <td>{file.name}</td>{@debug context.dateFormat}
+                    <td>{format(parseISO(file.modifiedTime), context.dateFormat)}</td>
                     <td>
                         <Button on:click={()=>download(file)}>
                             {$_('select')}
@@ -72,7 +99,7 @@
     {/if}
 </div>
 <style type="scss">
-    .google-drive {
+  .google-drive {
 
-    }
+  }
 </style>
