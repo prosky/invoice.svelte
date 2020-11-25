@@ -1,6 +1,6 @@
 const locales: Record<string, string> = {
-    'sk-SK': 'Slovenština',
     'cs-CZ': 'Čeština',
+    'sk-SK': 'Slovenština',
     'en-EN': 'English',
 };
 export default locales;

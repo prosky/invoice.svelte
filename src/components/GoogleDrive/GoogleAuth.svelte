@@ -1,20 +1,22 @@
 <script lang="ts">
+    import {_} from "svelte-i18n";
     import {createEventDispatcher, onMount} from 'svelte';
-    import {Button, ProgressCircular} from 'svelte-materialify';
+    import {Button, ListItem, ProgressCircular,Icon} from 'svelte-materialify';
     import loader from '@beyonk/async-script-loader';
     import googleDriveIcon from './google-drive.svg';
     import ClientConfig = gapi.auth2.ClientConfig;
     import GoogleUser = gapi.auth2.GoogleUser;
     import SigninOptions = gapi.auth2.SigninOptions;
-
+    import BasicProfile = gapi.auth2.BasicProfile;
+    import { mdiLogout } from '@mdi/js';
     export let config: ClientConfig;
-    export let text = 'Sign in with Google';
 
     const dispatch = createEventDispatcher();
     let googleAuth: gapi.auth2.GoogleAuth;
     let disabled: boolean = true;
     let loading: boolean = false;
     let signedIn: boolean = false;
+    let profile: BasicProfile;
 
     onMount(() => {
         loading = true;
@@ -45,8 +47,10 @@
         dispatch('sign', {isSignedIn});
         if (isSignedIn) {
             const user: GoogleUser = googleAuth.currentUser.get();
+            profile = user.getBasicProfile();
             dispatch('sign-in', {user});
         } else {
+            profile = null;
             dispatch('sign-out');
         }
     }
@@ -76,16 +80,30 @@
         googleAuth.signOut();
     }
 </script>
-
-<Button tile {disabled} on:click={onClick} class="google-auth">
-    {#if loading}
-        <ProgressCircular size={50} indeterminate color="primary"/>
+<ListItem multiline on:click={onClick}>
+    <span slot="prepend" class="mr-3">
+        {#if loading}
+            <ProgressCircular size={32} indeterminate color="primary"/>
+        {:else}
+            <img width="32" src={googleDriveIcon} alt="Google"/>
+        {/if}
+    </span>
+    {#if profile}
+        <div>
+            {profile.getName()}
+        </div>
+        <small>{profile.getEmail()}</small>
     {:else}
-        <img src={googleDriveIcon} alt="Google"/>
+        {$_('google.signIn')}
     {/if}
-    <span>{text}</span>
-</Button>
-
+    <span slot="append">
+    {#if profile}
+        <Button icon title={$_('google.signOut')}>
+        <Icon path={mdiLogout}/>
+        </Button>
+    {/if}
+    </span>
+</ListItem>
 
 <style type="scss">
     :global {

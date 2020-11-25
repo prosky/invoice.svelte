@@ -25,10 +25,13 @@ export const flashMessage = (message: string, type?: string) => update((value) =
     value.push(new FlashMessage(message, type));
     return value;
 });
-export const info = (message: string) => flashMessage(message,'info');
-export const warning = (message: string) => flashMessage(message,'warning');
-export const error = (message: string) => flashMessage(message,'error');
+export const info = (message: string) => flashMessage(message, 'info');
+export const warning = (message: string) => flashMessage(message, 'warning');
+export const error = (message: string) => flashMessage(message, 'error');
 
 export const remove = (message: FlashMessage) => update((value) => value.filter(val => val !== message));
 export const reset = () => set([]);
-export default {subscribe, flashMessage, reset, remove};
+export const store = {subscribe, flashMessage, reset, remove};
+export default {
+    info, warning, error, flashMessage
+};
