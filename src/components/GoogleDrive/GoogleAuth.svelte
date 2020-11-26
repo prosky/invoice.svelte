@@ -62,10 +62,6 @@
         dispatch('init-error', {error: e});
     }
 
-    const onClick = () => {
-        signIn()
-    }
-
     async function signIn(options?: SigninOptions) {
         try {
             await googleAuth.signIn(options);
@@ -78,11 +74,14 @@
         }
     }
 
+    const onSignInClick = () => {
+        signIn()
+    }
     const onSignOutClick = () => {
         googleAuth.signOut();
     }
 </script>
-<ListItem multiline on:click={onClick}>
+<ListItem multiline>
     <span slot="prepend" class="mr-3">
         {#if loading}
             <ProgressCircular size={32} indeterminate color="primary"/>
@@ -96,11 +95,13 @@
         </div>
         <small>{profile.getEmail()}</small>
     {:else}
-        {$_('google.signIn')}
+        <Button on:click={onSignInClick}>
+            {$_('google.signIn')}
+        </Button>
     {/if}
     <span slot="append">
     {#if profile}
-        <Button icon title={$_('google.signOut')}>
+        <Button icon title={$_('google.signOut')} on:click={onSignOutClick}>
         <Icon path={mdiLogout}/>
         </Button>
     {/if}

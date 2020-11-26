@@ -14,7 +14,7 @@
     import context, {config as appConfig} from "../../app/Context";
     import * as GoogleDrive from "./GoogleDrive";
     import {Writable, writable} from "svelte/store";
-    import {Button, Icon, List, ListItem, TextField} from "svelte-materialify/src";
+    import {Button, Icon, List, ListItem, TextField, ProgressCircular} from "svelte-materialify/src";
     import {debug} from "../Debugger/debug";
     import {mdiCloudUpload, mdiDelete, mdiSyncCircle} from '@mdi/js';
     import flash, {info} from "../Flashes/flashes";
@@ -22,7 +22,6 @@
     import BasicProfile = gapi.auth2.BasicProfile;
     import GDrive from "./GDrive";
     import {deserialize, serialize} from "../../app/utils/serialize";
-    import {onMount} from "svelte";
 
     const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
     const SCOPES = 'https://www.googleapis.com/auth/drive.file';
@@ -32,6 +31,7 @@
     let files: Writable<GoogleFileMeta[]> = writable<GoogleFileMeta[]>([]);
     let lastQuery: string = null;
     let query: string;
+    let uploading: boolean = false;
 
 
     let config = {
@@ -92,6 +92,7 @@
             const object = deserialize(json);
             // const json = await GoogleDrive.download(file.webContentLink);
             console.log(object);
+            context.setData(object);
             info('File downloaded');
         } catch (e) {
             flash.error(e)
@@ -119,16 +120,19 @@
 
     const upload = async () => {
         try {
+            uploading = true;
             info('Uploading file');
-            const invoice= context.data;
+            const invoice = context.data;
             const jsonData = serialize(invoice);
             console.log('Uploading file ', jsonData);
             const token = gapi.client.getToken();
             GDrive.init();
             GDrive.setAccessToken(token.access_token);
-            const response: Response = await GDrive.files.createFileMultipart(jsonData, 'application/json',{
-                'name': `${invoice.title}.json`,
-                'mimeType':  'application/json'
+            const response: Response = await GDrive.files.createFileMultipart(jsonData, 'application/json', {
+                'title': `${invoice.title}`,
+                'name': `${invoice.title}`,
+                'filename': `${invoice.title}.json`,
+                'mimeType': 'application/json'
             });
             console.log(response);
             console.log(await response.text());
@@ -136,6 +140,8 @@
         } catch (e) {
             flash.error(e)
             console.log(e);
+        } finally {
+            uploading = false;
         }
     }
 
@@ -148,7 +154,7 @@
             return '';
         }
         try {
-            return format(date, dateFormat || context.dateFormat)
+            return format(date, dateFormat || context.settings.dateFormat)
         } catch (e) {
             debug(e);
             return format(date, 'dd/MM/yyyy');
@@ -163,7 +169,7 @@
             return '';
         }
         try {
-            return format(date, context.dateFormat)
+            return format(date, context.settings.dateFormat)
         } catch (e) {
             return format(date, 'd. M. yyyy')
         }
@@ -197,8 +203,13 @@
             </ListItem>
         {/each}
     </List>
-    <Button size="large" depressed block on:click={()=>upload()} class="primary-text">
-        <Icon class="primary mr-3" path="{mdiCloudUpload}"/>
+    <Button disabled={uploading} active={uploading} size="large" depressed block on:click={()=>upload()}
+            class="primary-text">
+        {#if uploading}
+            <ProgressCircular size={24} indeterminate color="primary mr-3"/>
+        {:else}
+            <Icon class="primary mr-3" path="{mdiCloudUpload}"/>
+        {/if}
         {$_('google.upload')}
     </Button>
 </div>

@@ -33,7 +33,7 @@ export default {
     },
     invoice: {
         title: 'Název',
-        product:{
+        product: {
             description: 'Popis',
             quantity: 'Množství',
             price: 'Cena',
@@ -46,14 +46,17 @@ export default {
         withoutVAT: "Neplátce DPH",
         withVAT: "Plátce DPH"
     },
-    files:{
+    files: {
         name: "Název",
         modifiedTime: "Upraveno",
 
     },
-    google:{
+    google: {
         signIn: 'Sign in with Google',
         signOut: 'Odhlásit',
+    },
+    settings: {
+        title: 'Nastavení'
     }
 
 }

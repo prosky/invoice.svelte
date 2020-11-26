@@ -11,7 +11,7 @@ init({
 addMessages('en-EN', en);
 addMessages('cs-CZ', cs);
 
-context.load();
+context.initialize();
 
 //const basePath = location.pathname.replace('index.html','');
 const app = new App({

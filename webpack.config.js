@@ -25,7 +25,7 @@ module.exports = (env = {}) => {
     const PRODUCTION = !DEVELOPMENT;
     const DEV_SERVER = env.WEBPACK_SERVE;
     const HASH = DEV_SERVER ? '' : '.[contenthash:8]';
-    console.log({DEVELOPMENT,PRODUCTION,DEV_SERVER,HASH});
+    console.log({DEVELOPMENT, PRODUCTION, DEV_SERVER, HASH});
     /*const smp = new SpeedMeasurePlugin({
         disable: false//PRODUCTION
     });*/
@@ -33,6 +33,7 @@ module.exports = (env = {}) => {
         entry: resolve(SRC_DIR, 'index.js'),
         devServer: {
             open: true,
+            overlay: true,
             //compress: true,
             hot: true,
             inline: true,
@@ -87,7 +88,7 @@ module.exports = (env = {}) => {
                 {
                     test: /\.s?css$/,
                     use: [
-                        MiniCssExtractPlugin.loader,
+                        DEV_SERVER ? 'style-loader' : MiniCssExtractPlugin.loader,
                         "css-loader",
                         "postcss-loader",
                         {
@@ -116,10 +117,15 @@ module.exports = (env = {}) => {
                         fullySpecified: false // load Svelte correctly
                     },
                     use: {
-                        loader: 'svelte-loader',
+                        loader: 'svelte-loader-hot',
                         options: {
                             dev: DEV_SERVER,
+                            hotReload: true,
                             emitCss: true,
+                            hotOptions: {
+                                noPreserveState: false,
+                                optimistic: true,
+                            },
                             preprocess: require('svelte-preprocess')({
                                 scss: {
                                     includePaths: ['src/scss'],
@@ -132,19 +138,19 @@ module.exports = (env = {}) => {
         },
         plugins: [
             new ProgressBarPlugin(),
-            !DEV_SERVER && new CleanWebpackPlugin({
-                cleanOnceBeforeBuildPatterns: ['**/*', '!static*'],
-            }),
             new SourceMapDevToolPlugin({
                 filename: 'sourcemaps/[file].map',
             }),
-            env.analyze && new BundleAnalyzerPlugin(),
             new VirtualModulesPlugin(),
-            DEV_SERVER && new HotModuleReplacementPlugin(),
             new HtmlWebpackPlugin({
                 filename: resolve(BUILD_DIR, 'index.html'),
             }),
-            new MiniCssExtractPlugin({
+            env.analyze && new BundleAnalyzerPlugin(),
+            DEV_SERVER && new HotModuleReplacementPlugin(),
+            !DEV_SERVER && new CleanWebpackPlugin({
+                cleanOnceBeforeBuildPatterns: ['**/*', '!static*'],
+            }),
+            !DEV_SERVER && new MiniCssExtractPlugin({
                 filename: `[name]${HASH}.css`,
                 chunkFilename: `[id]${HASH}.css`
             }),

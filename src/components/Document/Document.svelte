@@ -1,6 +1,6 @@
 <script lang="ts">
     import {_} from 'svelte-i18n';
-    import {debounce} from 'lodash';
+
     import {Button, Col, Icon, MaterialApp, Row, Switch, TextField} from 'svelte-materialify/src';
     import {mdiCloudDownloadOutline, mdiFileFind, mdiTrashCan} from '@mdi/js';
     import CustomSelect from "../Inputs/CustomSelect.svelte";
@@ -8,7 +8,7 @@
     import currencies from "../../app/data/currencies";
     import Invoice from "../Invoice/Invoice.svelte";
     import app from '../../app/Context';
-    import counter from "../../app/saveStore";
+
     import type {Formatter} from "../../app/types";
 
 
@@ -17,17 +17,13 @@
 
     let document: HTMLDivElement;
 
-    const save = debounce(() => app.save(), 1000);
 
     let invoice: Invoice = app.data;
     let format: Formatter;
     let money: (num: number) => string;
     let formatter: Intl.NumberFormat;
     let currency: string = null, locale: string = null;
-    $: if (invoice) {
-        save();
-        counter.increment();
-    }
+
     $: if (currency !== invoice.currency || locale !== invoice.locale) {
         currency = invoice.currency;
         locale = invoice.locale;
