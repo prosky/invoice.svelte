@@ -1,7 +1,7 @@
 <script lang="ts">
     import {_} from 'svelte-i18n';
     import type Invoice from "../../app/classes/Invoice";
-    import {TextField} from "svelte-materialify";
+    import {TextField} from "svelte-materialify/src";
     import {sumPrice, sumTax} from "../../app/utils/calc";
     import {Formatter} from "../../app/types";
 

@@ -2,7 +2,7 @@
     import Home from "./pages/Home.svelte";
     //import Settings from "./pages/Settings.svelte";
     import counter from "./app/saveStore";
-    import {MaterialApp, Badge,Button} from 'svelte-materialify';
+    import {Button, MaterialApp} from 'svelte-materialify/src';
     import Flashes from "./components/Flashes/Flashes.svelte";
     import Debugger from "./components/Debugger/Debugger.svelte";
     /*

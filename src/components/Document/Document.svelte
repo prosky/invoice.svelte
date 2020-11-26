@@ -1,28 +1,22 @@
 <script lang="ts">
     import {_} from 'svelte-i18n';
     import {debounce} from 'lodash';
-    import {Button, Col, Icon, MaterialApp, Row, Switch, TextField} from 'svelte-materialify';
+    import {Button, Col, Icon, MaterialApp, Row, Switch, TextField} from 'svelte-materialify/src';
     import {mdiCloudDownloadOutline, mdiFileFind, mdiTrashCan} from '@mdi/js';
     import CustomSelect from "../Inputs/CustomSelect.svelte";
     import locales from "../../app/data/locales";
     import currencies from "../../app/data/currencies";
-    import pdfMake from "pdfmake/build/pdfmake";
-    import pdfFonts from "./vfs_fonts";
-    import htmlToPdfmake from "html-to-pdfmake";
     import Invoice from "../Invoice/Invoice.svelte";
     import app from '../../app/Context';
     import counter from "../../app/saveStore";
-    import {Formatter} from "../../app/types";
+    import type {Formatter} from "../../app/types";
 
-    pdfMake.vfs = pdfFonts;
+
+    const downloadPDF = () => undefined;
+    const showPDF = () => undefined;
+
     let document: HTMLDivElement;
-    const downloadPDF = () => {
-        console.log(document.innerHTML);
-        pdfMake.createPdf({content: htmlToPdfmake(document.innerHTML)}).download();
-    }
-    const showPDF = () => {
-        console.log('showPDF');
-    }
+
     const save = debounce(() => app.save(), 1000);
 
     let invoice: Invoice = app.data;
@@ -90,30 +84,30 @@
 </div>
 
 <style type="scss">
-    .document {
-        position: relative;
-    }
+  .document {
+    position: relative;
+  }
 
-    aside {
-        position: absolute;
-        right: 100%;
-        top: 0;
-        margin-right: 1rem;
-    }
+  aside {
+    position: absolute;
+    right: 100%;
+    top: 0;
+    margin-right: 1rem;
+  }
 
-    .page {
-        //--theme-text-primary: black;
-        //--theme-text-secondary: black;
-        //--theme-text-disabled: #5d5d5d;
-        width: 21cm;
-        min-height: 29.7cm;
-        box-sizing: border-box;
-        padding: 1cm;
-        margin: auto;
-        box-shadow: .5rem .5rem 1rem rgba(0, 0, 0, 0.8);
-    }
-
-    .s-input input, .s-input textarea {
-        color: black;
-    }
+  .page {
+    //--theme-text-primary: black;
+    //--theme-text-secondary: black;
+    //--theme-text-disabled: #5d5d5d;
+    width: 21cm;
+    min-height: 29.7cm;
+    box-sizing: border-box;
+    padding: 1cm;
+    margin: auto;
+    box-shadow: .5rem .5rem 1rem rgba(0, 0, 0, 0.8);
+  }
+/*
+  .s-input input, .s-input textarea {
+    color: black;
+  }*/
 </style>

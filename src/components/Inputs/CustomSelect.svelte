@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Select} from "svelte-materialify";
+    import {Select} from "svelte-materialify/src";
     import * as rules from "../../app/utils/rules";
 
     type T = unknown;

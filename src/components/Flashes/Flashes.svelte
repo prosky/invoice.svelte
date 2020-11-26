@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Alert, Icon} from 'svelte-materialify/src';
-    import {store} from './flashesStore';
+    import {store} from './flashes';
 </script>
 
 <div class="flashes">

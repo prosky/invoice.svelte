@@ -1,6 +1,6 @@
 <script lang="ts">
     import {_} from 'svelte-i18n';
-    import {Col, Row, TextField, Textarea} from "svelte-materialify";
+    import {Col, Row, TextField, Textarea} from "svelte-materialify/src";
     import Company from "./Company.svelte";
     import Summary from "./Summary.svelte";
     import type Invoice from "../../app/classes/Invoice";

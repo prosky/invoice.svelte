@@ -1,6 +1,7 @@
 <script context="module" lang="ts">
     import SimpleCache from "./SimpleCache";
-    import {GoogleFileMeta} from "../../app/types";
+    import type {GoogleFileMeta} from "../../app/types";
+
     const cache = new SimpleCache<string, GoogleFileMeta[]>();
 
 </script>
@@ -13,12 +14,15 @@
     import context, {config as appConfig} from "../../app/Context";
     import * as GoogleDrive from "./GoogleDrive";
     import {Writable, writable} from "svelte/store";
-    import {Button, Icon, List, ListItem, TextField} from "svelte-materialify";
+    import {Button, Icon, List, ListItem, TextField} from "svelte-materialify/src";
     import {debug} from "../Debugger/debug";
     import {mdiCloudUpload, mdiDelete, mdiSyncCircle} from '@mdi/js';
-    import flash from "../Flashes/flashesStore";
+    import flash, {info} from "../Flashes/flashes";
     import GoogleUser = gapi.auth2.GoogleUser;
     import BasicProfile = gapi.auth2.BasicProfile;
+    import GDrive from "./GDrive";
+    import {deserialize, serialize} from "../../app/utils/serialize";
+    import {onMount} from "svelte";
 
     const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
     const SCOPES = 'https://www.googleapis.com/auth/drive.file';
@@ -37,7 +41,9 @@
         scope: SCOPES,
         fetch_basic_profile: true,
     }
+
     const delaySearch = debounce<() => void>(() => update(), 500);
+
     const onSignIn = async (event: CustomEvent) => {
         user = event.detail.user;
         profile = user.getBasicProfile();
@@ -78,8 +84,15 @@
 
     const download = async (file: GoogleFileMeta) => {
         try {
-            const json = await GoogleDrive.download(file.webContentLink);
-            console.log(json);
+            const token = gapi.client.getToken();
+            GDrive.init();
+            GDrive.setAccessToken(token.access_token);
+            const response: Response = await GDrive.files.download(file.id);
+            const json = await response.text();
+            const object = deserialize(json);
+            // const json = await GoogleDrive.download(file.webContentLink);
+            console.log(object);
+            info('File downloaded');
         } catch (e) {
             flash.error(e)
             console.log(e);
@@ -87,11 +100,43 @@
     }
 
     const remove = async (file: GoogleFileMeta) => {
-
+        try {
+            info('Uploading file');
+            const jsonData = serialize(context.data);
+            console.log('Uploading file ', jsonData);
+            const token = gapi.client.getToken();
+            GDrive.init();
+            GDrive.setAccessToken(token.access_token);
+            const response: Response = await GDrive.files.delete(file.id);
+            console.log(response);
+            console.log(await response.text());
+            await update(true);
+        } catch (e) {
+            flash.error(e)
+            console.log(e);
+        }
     }
 
     const upload = async () => {
-
+        try {
+            info('Uploading file');
+            const invoice= context.data;
+            const jsonData = serialize(invoice);
+            console.log('Uploading file ', jsonData);
+            const token = gapi.client.getToken();
+            GDrive.init();
+            GDrive.setAccessToken(token.access_token);
+            const response: Response = await GDrive.files.createFileMultipart(jsonData, 'application/json',{
+                'name': `${invoice.title}.json`,
+                'mimeType':  'application/json'
+            });
+            console.log(response);
+            console.log(await response.text());
+            await update(true);
+        } catch (e) {
+            flash.error(e)
+            console.log(e);
+        }
     }
 
     const stringDateFormat = (dateString: string, dateFormat?: string) => {
@@ -110,6 +155,20 @@
         }
     }
 
+    const formatTextDate = (text: string, dateFormat: string) => {
+        let date: Date;
+        try {
+            date = parseISO(text);
+        } catch (e) {
+            return '';
+        }
+        try {
+            return format(date, context.dateFormat)
+        } catch (e) {
+            return format(date, 'd. M. yyyy')
+        }
+    }
+
 </script>
 
 
@@ -119,7 +178,7 @@
                on:change={delaySearch} on:blur={()=>update()}
                on:keyup={(e)=>e.key==='Enter' && update()}>
         {$_('search')}
-            <span slot="append">
+        <span slot="append">
                 <Button icon on:click={()=>update(true)} title={$_('buttons.update')}>
                     <Icon path={mdiSyncCircle}/>
                 </Button>

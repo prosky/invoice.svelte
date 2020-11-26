@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Alert, AppBar, Badge, Button, Icon, ListItem, Menu} from 'svelte-materialify';
+    import {Alert, AppBar, Badge, Button, Icon, ListItem, Menu} from 'svelte-materialify/src';
     import {storage} from './debug';
     import {mdiLadybug} from '@mdi/js';
     import Output from "./Output.svelte";

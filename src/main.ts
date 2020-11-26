@@ -1,4 +1,3 @@
-import './scss/global.scss';
 import App from './App.svelte';
 import context from './app/Context';
 import {addMessages,init,getLocaleFromNavigator} from 'svelte-i18n';

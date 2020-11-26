@@ -2,7 +2,7 @@
 
 <script lang="ts">
     import {_} from 'svelte-i18n';
-    import {TextField} from "svelte-materialify";
+    import {TextField} from "svelte-materialify/src";
     import type Company from "../../app/classes/Company";
     import CustomSelect from "../Inputs/CustomSelect.svelte";
     import countries from "../../app/data/countries";
