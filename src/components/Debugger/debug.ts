@@ -1,5 +1,4 @@
 import {writable} from 'svelte/store';
-
 export class DebugMessage {
     message: any;
     type: string = 'debug';
@@ -11,7 +10,6 @@ export class DebugMessage {
         this.type = type;
     }
 }
-
 export class Group {
     items: DebugMessage[];
     constructor(items: DebugMessage[]) {
@@ -23,7 +21,6 @@ export class Group {
     };
     debug = debug
 }
-
 export const storage= writable<DebugMessage[]>([]);
 const {set, update} = storage;
 const add = (message: any, type?: string) => {

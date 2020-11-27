@@ -14,9 +14,8 @@
     const showPDF = () => undefined;
 
     let document: HTMLDivElement;
-
-    export let invoice: Invoice;
-    export let onReset: ()=>void;
+	export let invoice: Invoice;
+	export let onReset: ()=>void;
 
     let format: Formatter;
     let money: (num: number) => string;

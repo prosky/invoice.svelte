@@ -101,7 +101,6 @@ export default class Files {
 
     get(fileId, queryParams) {
         const parameters = GDrive.stringifyQueryParams(queryParams);
-
         return fetch(`${GDrive.urlFiles}/${fileId}${parameters}`, {
             headers: GDrive.createHeaders()
         });

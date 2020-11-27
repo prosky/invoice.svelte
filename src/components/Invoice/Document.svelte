@@ -8,7 +8,6 @@
     import DatePicker from "../Inputs/DatePicker/DatePicker.svelte";
     import type {Formatter} from "../../app/types";
     import ImagePicker from "../Inputs/ImagePicker/ImagePicker.svelte";
-    import DragAndDrop from "../DragAndDrop/DragAndDrop.svelte";
 
     export let invoice: Invoice;
     export let format: Formatter;

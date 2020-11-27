@@ -44,6 +44,7 @@
 <table class="products black-text">
     <thead>
     <tr>
+		<th> </th>
         <th>
             <TextField bind:value={invoice.labels.description} placeholder={$_('invoice.product.description')}/>
         </th>
@@ -67,6 +68,7 @@
     <tbody bind:this={list}>
 		{#each products as product,i (i)}
 		<tr>
+			<td> xxxxx   </td>
             <td>
                 <Textarea rows={1} autogrow bind:value={product.description}
                           placeholder={$_('invoice.product.description')}/>
