@@ -168,7 +168,6 @@
     }
 
     const formatTextDate = (text: string, dateFormat: string) => {
-<<<<<<< HEAD
         let date: Date;
         try {
             date = parseISO(text);
@@ -178,17 +177,6 @@
         try {
             return format(date, app.settings.dateFormat)
         } catch (e) {
-=======
-       let date:Date;
-        try{
-            date = parseISO(text);
-        }catch (e){
-            return '';
-        }
-        try{
-            return format(date, context.dateFormat)
-        }catch (e) {
->>>>>>> fc8a690979296752de61d5c156b8038d52153d93
             return format(date, 'd. M. yyyy')
         }
     }
