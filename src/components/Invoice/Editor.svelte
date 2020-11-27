@@ -1,15 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import {
-        Button,
-        Col,
-        Icon,
-        MaterialApp,
-        Row,
-        Switch,
-        TextField,
-    } from "svelte-materialify/src";
+    import { Button, Col, Icon, MaterialApp, Row, Switch, TextField } from "svelte-materialify/src";
     import { mdiCloudDownloadOutline, mdiFileFind, mdiTrashCan } from "@mdi/js";
     import CustomSelect from "../Inputs/CustomSelect.svelte";
     import locales from "../../app/data/locales";
@@ -47,22 +39,17 @@
     }
 </script>
 
-<style type="scss">
+<style>
     .document {
         position: relative;
     }
-
     aside {
         position: absolute;
         right: 100%;
         top: 0;
         margin-right: 1rem;
     }
-
     .page {
-        //--theme-text-primary: black;
-        //--theme-text-secondary: black;
-        //--theme-text-disabled: #5d5d5d;
         width: 21cm;
         min-height: 29.7cm;
         box-sizing: border-box;
@@ -70,21 +57,12 @@
         margin: auto;
         box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.8);
     }
-    /*
-  .s-input input, .s-input textarea {
-    color: black;
-  }*/
 </style>
 
 <div>
     <Row>
         <Col>
-            <CustomSelect
-                required
-                bind:value={invoice.currency}
-                items={currencies}>
-                {$_('invoice.currencies')}
-            </CustomSelect>
+            <CustomSelect required bind:value={invoice.currency} items={currencies}> {$_('invoice.currencies')}</CustomSelect>
         </Col>
         <Col>
             <Switch bind:checked={invoice.withVAT}>
@@ -105,31 +83,13 @@
     <div class="document page white">
         <aside>
             <nav>
-                <Button
-                    on:click={downloadPDF}
-                    size="large"
-                    fab
-                    icon
-                    class="primary-text"
-                    title={$_('buttons.download_pdf')}>
+                <Button on:click={downloadPDF} size="large" fab icon class="primary-text" title={$_('buttons.download_pdf')}>
                     <Icon size="3rem" path={mdiCloudDownloadOutline} />
                 </Button>
-                <Button
-                    on:click={showPDF}
-                    size="large"
-                    fab
-                    icon
-                    class="primary-text"
-                    title={$_('buttons.show_pdf')}>
+                <Button on:click={showPDF} size="large" fab icon class="primary-text" title={$_('buttons.show_pdf')}>
                     <Icon size="3rem" path={mdiFileFind} />
                 </Button>
-                <Button
-                    on:click={onReset}
-                    size="large"
-                    fab
-                    icon
-                    class="red-text"
-                    title={$_('buttons.reset')}>
+                <Button on:click={onReset} size="large" fab icon class="red-text" title={$_('buttons.reset')}>
                     <Icon size="3rem" path={mdiTrashCan} />
                 </Button>
             </nav>

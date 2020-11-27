@@ -12,9 +12,6 @@
 
     export let invoice: Invoice;
     export let format: Formatter;
-    const downloadPDF = () => {
-        console.log('downloadPDF');
-    }
 </script>
 
 
@@ -61,7 +58,6 @@
         </Col>
     </Row>
     <div class="mb-4">
-        <DragAndDrop/>
         <Products bind:invoice/>
     </div>
     <div class="mb-6">
@@ -76,9 +72,8 @@
         <Textarea placeholder={$_('invoice.term')} bind:value={invoice.term} rows={3}/>
 </div>
 </div>
-<style type="scss">
+<style >
   .invoice {
     position: relative;
   }
-
 </style>

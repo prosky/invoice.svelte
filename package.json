@@ -28,6 +28,7 @@
     "@types/jspdf": "^1.3.3",
     "@types/lodash": "^4.14.165",
     "@types/pdfmake": "^0.1.16",
+    "@types/sortablejs": "^1.10.6",
     "autoprefixer": "^10.0.2",
     "date-fns": "^2.16.1",
     "dropzone": "^5.7.2",
@@ -36,6 +37,7 @@
     "html-to-pdfmake": "^2.1.2",
     "json-format-highlight": "^1.0.4",
     "lodash": "^4.17.20",
+    "node-sass": "^5.0.0",
     "pdfmake": "^0.1.68",
     "postcss": "^8.1.10",
     "rollup": "^2.33.3",
@@ -47,17 +49,17 @@
     "rollup-plugin-url": "^3.0.1",
     "sass": "^1.29.0",
     "scss": "^0.2.4",
+    "simple-common-utils": "^2.2.0",
+    "sortablejs": "^1.12.0",
     "svelte": "^3.30.0",
     "svelte-check": "^1.1.17",
     "svelte-i18n": "^3.3.0",
-    "utf8": "^3.0.0",
-    "node-sass": "^5.0.0",
-    "simple-common-utils": "^2.2.0",
     "svelte-materialify": "^0.3.3",
     "svelte-preprocess": "^4.6.1",
     "svelte-routing": "^1.4.2",
     "tslib": "^2.0.3",
-    "typescript": "^4.1.2"
+    "typescript": "^4.1.2",
+    "utf8": "^3.0.0"
   },
   "dependencies": {
     "sirv-cli": "^1.0.8"
