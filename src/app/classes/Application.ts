@@ -10,17 +10,27 @@ import {writable} from "svelte/store";
 import counter from "../../app/saveStore";
 
 
+<<<<<<< HEAD
 export interface Settings{
     locale: string;
     dateFormat: string;
 }
 
 export default class Application {
+=======
+export default class Application {
+
+    config: Config;
+
+    locale: string;
+    dateFormat: string;
+>>>>>>> fc8a690979296752de61d5c156b8038d52153d93
 
     config: Config;
     settings: Settings;
     storage: StorageInterface;
     factory: DataFactory;
+<<<<<<< HEAD
 
 
     data: Invoice;
@@ -29,6 +39,10 @@ export default class Application {
 
     saveDebounced: () => void;
     saveSettingsDebounced: () => void;
+=======
+    data: Invoice;
+    storage: StorageInterface;
+>>>>>>> fc8a690979296752de61d5c156b8038d52153d93
 
     static defaultSettings() {
         const locale = navigator.language || Object.keys(locales)[0];
