@@ -24,8 +24,8 @@ export class Group {
     debug = debug
 }
 
-const {subscribe, set, update} = writable<DebugMessage[]>([]);
-
+export const storage= writable<DebugMessage[]>([]);
+const {set, update} = storage;
 const add = (message: any, type?: string) => {
     let item = new DebugMessage(message, type);
     update((value) => {
@@ -37,7 +37,6 @@ const add = (message: any, type?: string) => {
 export const debug = (...any): Group => {
     return new Group(any.map((item) => add(item, 'debug')));
 };
-export const remove = (message: DebugMessage) => update((value) => value.filter(val => val !== message));
 export const reset = () => set([]);
-export const storage = {subscribe, DebugMessage, reset, remove};
+export const remove = (message: DebugMessage) => update((value) => value.filter(val => val !== message));
 export default debug;

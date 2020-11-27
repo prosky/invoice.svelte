@@ -2,9 +2,11 @@
     import Home from "./pages/Home.svelte";
     //import Settings from "./pages/Settings.svelte";
     import counter from "./app/saveStore";
-    import {MaterialApp, Badge,Button} from 'svelte-materialify';
+    import {Button, MaterialApp} from 'svelte-materialify';
     import Flashes from "./components/Flashes/Flashes.svelte";
     import Debugger from "./components/Debugger/Debugger.svelte";
+    import type Application from "./app/classes/Application";
+
     /*
     export let basePath: string;
     export let url = "";
@@ -12,16 +14,20 @@
         ['', 'home', Home],
         ['settings', 'settings', Settings],
     ];*/
-    let theme = 'dark';
+    export let theme = 'dark';
+    export let application: Application;
+    
 </script>
 
-<MaterialApp theme={theme}>
+
+
+<MaterialApp {theme}>
     <Debugger>
         <Button title="Saves count" size="small" disabled icon class="primary-color">{$counter}</Button>
     </Debugger>
     <Flashes/>
     <main>
-        <Home/>
+        <Home {application}/>
     </main>
 </MaterialApp>
 

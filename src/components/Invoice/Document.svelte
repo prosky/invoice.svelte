@@ -1,13 +1,14 @@
 <script lang="ts">
     import {_} from 'svelte-i18n';
-    import {Col, Row, TextField, Textarea} from "svelte-materialify";
+    import {Col, Row, TextField, Textarea} from "svelte-materialify/src";
     import Company from "./Company.svelte";
     import Summary from "./Summary.svelte";
     import type Invoice from "../../app/classes/Invoice";
     import Products from "./Products.svelte";
     import DatePicker from "../Inputs/DatePicker/DatePicker.svelte";
-    import {Formatter} from "../../app/types";
+    import type {Formatter} from "../../app/types";
     import ImagePicker from "../Inputs/ImagePicker/ImagePicker.svelte";
+    import DragAndDrop from "../DragAndDrop/DragAndDrop.svelte";
 
     export let invoice: Invoice;
     export let format: Formatter;
@@ -60,6 +61,7 @@
         </Col>
     </Row>
     <div class="mb-4">
+        <DragAndDrop/>
         <Products bind:invoice/>
     </div>
     <div class="mb-6">

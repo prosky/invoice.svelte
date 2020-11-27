@@ -6,7 +6,6 @@ export const iconMap: Record<string, string> = {
     info: mdiInformation,
     warning: mdiAlert
 }
-
 export class FlashMessage {
     message: string;
     type: string = 'info';

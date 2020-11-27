@@ -1,9 +1,11 @@
 <script lang="ts">
-    import {crossfade} from 'svelte/transition'
-    import {elasticOut, quintOut} from 'svelte/easing'
+    import {crossfade} from 'svelte/transition';
+    import {elasticOut, quintOut} from 'svelte/easing';
+    import {draggable} from './draggable';
+    import { flip } from 'svelte/animate';
 
     const shelf = [null, {id: 3, name: 'Soup'}, {id: 6, name: 'Milk'}, null, null]
-    const cart = [{id: 5, name: 'Beans'}, {id: 4, name: 'Tomato'}]
+    let cart = [{id: 5, name: 'Beans'}, {id: 4, name: 'Tomato'}]
 
     function putInShelf(item, index) {
         const oldItem = shelf[index]
@@ -28,14 +30,10 @@
         fallback(node, params) {
             const style = getComputedStyle(node);
             const transform = style.transform === 'none' ? '' : style.transform;
-
             return {
                 duration: 600,
                 easing: quintOut,
-                css: t => `
-        transform: ${transform} scale(${t});
-        opacity: ${t}
-      `
+                css: t => `transform: ${transform} scale(${t});opacity: ${t}`
             };
         }
     });
@@ -53,14 +51,12 @@
         margin: 3px;
         vertical-align: top;
     }
-
     .cart {
         position: relative;
         background: #eee;
         box-shadow: 5px 5px 10px -10px black inset;
         min-height: 64px;
     }
-
     .item {
         height: 56px;
         width: 56px;
@@ -70,16 +66,13 @@
         margin: 4px;
         box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
     }
-
     .slot .item {
         position: absolute;
     }
-
     :global(.dragged) {
         pointer-events: none;
         z-index: 100;
     }
-
     :global(.slot.droptarget, .cart.droptarget) {
         background: #ddd;
     }

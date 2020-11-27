@@ -1,11 +1,11 @@
 <script lang="ts">
 
     import {_} from 'svelte-i18n';
-    import {Button, Icon, Textarea, TextField} from "svelte-materialify";
+    import {Button, Icon, Textarea, TextField} from "svelte-materialify/src";
     import type Invoice from "../../app/classes/Invoice";
     import {mdiClose, mdiPlusCircleOutline} from '@mdi/js';
-    import app from '../../app/Context';
-    import Product from "../../app/classes/Product";
+    import app from '../../app';
+    import type Product from "../../app/classes/Product";
     import {calculatePrice, calculateTax} from "../../app/utils/calc";
 
     export let invoice: Invoice;

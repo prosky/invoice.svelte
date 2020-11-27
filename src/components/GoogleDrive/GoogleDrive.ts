@@ -3,7 +3,7 @@
  */
 import {serialize} from "../../app/utils/serialize";
 import type {GoogleFileMeta} from "../../app/types";
-import {info} from "../Flashes/flashesStore";
+import {info} from "../Flashes/flashes";
 
 export const listFiles = async (searchTerm: string | null = null): Promise<GoogleFileMeta[]> => {
     info(`searching ${searchTerm}`);
@@ -48,13 +48,15 @@ export const upload = async (fileName: string, data: object) => {
 
 
 export const download = async (url: string): Promise<object> => {
-
+    const token = gapi.client.getToken();
+    console.log({token});
     const response = await fetch(url, {
         method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-        }
+        headers: new Headers({
+            'Authorization': `Bearer ${token.access_token}`,
+            //'Accept': 'application/json',
+            //'Access-Control-Allow-Origin': '*'
+        })
     });
     console.log(response);
     return response.json();

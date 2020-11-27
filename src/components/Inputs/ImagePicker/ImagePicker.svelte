@@ -5,7 +5,7 @@
     import {readFile, resizeImage} from "./fileUtils";
     import DropZone from "../DropZone.svelte";
     import {DropzoneOptions} from "dropzone";
-    import {error} from "../../Flashes/flashesStore";
+    import {error} from "../../Flashes/flashes";
 
     export let value: string;
     export let maxWidth: number | undefined = 360;

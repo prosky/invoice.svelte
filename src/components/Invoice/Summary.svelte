@@ -3,7 +3,7 @@
     import type Invoice from "../../app/classes/Invoice";
     import {TextField} from "svelte-materialify";
     import {sumPrice, sumTax} from "../../app/utils/calc";
-    import {Formatter} from "../../app/types";
+    import type {Formatter} from "../../app/types";
 
     export let invoice: Invoice;
     export let format: Formatter;
@@ -44,23 +44,16 @@
         </tbody>
     </table>
 </div>
-<style type="scss">
+<style>
     table {
+        min-width: 50%;
         border-collapse: collapse;
     }
-
     table, td, th {
         border: none;
     }
-
     .summary {
         display: flex;
         justify-content: flex-end;
-
-        table {
-            min-width: 50%;
-        }
-
     }
-
 </style>

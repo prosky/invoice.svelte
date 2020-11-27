@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Alert, AppBar, Badge, Button, Icon, ListItem, Menu} from 'svelte-materialify';
-    import {storage} from './debug';
+    import {storage,remove} from './debug';
     import {mdiLadybug} from '@mdi/js';
     import Output from "./Output.svelte";
     $: value = $storage.length;
@@ -16,18 +16,20 @@
                     </Button>
                 </Badge>
             </div>
-            {#each $storage as message }
-                <ListItem ripple={false} selectable dense multiline>
-                    <Alert dismissible on:dissmiss={()=>storage.remove(message)} class={`${message.type}-text`}  dense>
-                        <Output data={message.message}/>
-                    </Alert>
-                </ListItem>
-            {/each}
+            {#if $storage}
+                {#each $storage as message }
+                    <ListItem ripple={false} selectable dense multiline>
+                        <Alert dismissible on:dissmiss={()=>remove(message)} class={`${message.type}-text`}  dense>
+                            <Output data={message.message}/>
+                        </Alert>
+                    </ListItem>
+                {/each}
+            {/if}
         </Menu>
         <slot/>
     </AppBar>
 </div>
-<style type="scss">
+<style>
     .small{
         font-size: .8em;
     }
