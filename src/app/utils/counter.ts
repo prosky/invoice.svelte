@@ -1,8 +1,7 @@
 import { writable } from 'svelte/store';
 
-function createCount() {
+export function createCounter() {
     const { subscribe, set, update } = writable(0);
-
     return {
         subscribe,
         increment: () => update(n => n + 1),
@@ -11,4 +10,4 @@ function createCount() {
     };
 }
 
-export default createCount();
+export default createCounter();

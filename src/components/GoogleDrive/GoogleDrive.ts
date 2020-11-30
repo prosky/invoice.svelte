@@ -3,10 +3,11 @@
  */
 import {serialize} from "../../app/utils/serialize";
 import type {GoogleFileMeta} from "../../app/types";
-import {info} from "../Flashes/flashes";
+//import {info} from "../Flashes/flashes";
 
 export const listFiles = async (searchTerm: string | null = null): Promise<GoogleFileMeta[]> => {
-    info(`searching "${searchTerm}"`);
+    //info(`searching "${searchTerm}"`);
+	console.debug(`searching "${searchTerm}"`);
     const response: gapi.client.Response<gapi.client.drive.FileList> = await gapi.client.drive.files.list({
         pageSize: 10,
         fields: 'nextPageToken, files(id, name, mimeType, modifiedTime, webContentLink)',

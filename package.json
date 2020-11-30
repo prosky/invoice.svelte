@@ -30,6 +30,7 @@
     "@types/pdfmake": "^0.1.16",
     "@types/sortablejs": "^1.10.6",
     "autoprefixer": "^10.0.2",
+    "chokidar": "^3.4.3",
     "date-fns": "^2.16.1",
     "dropzone": "^5.7.2",
     "gapi-script": "^1.0.2",

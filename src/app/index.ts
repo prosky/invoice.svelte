@@ -1,4 +1,3 @@
-
 import {LocalStorage} from "./classes/Storage";
 import Application from "./classes/Application";
 import Config from "./Config";

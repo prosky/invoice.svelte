@@ -2,10 +2,11 @@ import dateFormats from "./dateFormats";
 import {currencies} from "./currencies";
 import Invoice from "../classes/Invoice";
 import Product from "../classes/Product";
-import {getLocaleFromNavigator} from "svelte-i18n";
 import countries from "./countries";
 
-
+function uid(){
+	return Math.random().toString(36).substring(7);
+}
 const DEFAULT_LOCALE = 'en-EN';
 
 export default class DataFactory {
@@ -32,8 +33,8 @@ export default class DataFactory {
         return new DataFactory(locale, dateFormat, country, currency);
     }
 
-    invoice = (): Invoice => new Invoice(this.country, this.currency, this.locale, this.dateFormat)
-    product = (): Product => new Product('', 0.00, 1, 21)
+    invoice = (): Invoice => new Invoice(uid(),this.country, this.currency, this.locale, this.dateFormat)
+    product = (): Product => new Product(uid(),'', 0.00, 1, 21)
 
 
 }

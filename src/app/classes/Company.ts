@@ -1,3 +1,4 @@
+import Entity from "./Entity";
 
 export interface CompanyInterface {
     name: string
@@ -8,7 +9,7 @@ export interface CompanyInterface {
     tin: string
 }
 
-export default class Company implements CompanyInterface {
+export default class Company extends Entity implements CompanyInterface {
 
   name = '';
   address = '';
@@ -18,6 +19,7 @@ export default class Company implements CompanyInterface {
   tin = '';
 
   constructor(country: string) {
+  	super();
     this.country = country;
   }
 
