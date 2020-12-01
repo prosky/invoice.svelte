@@ -11,10 +11,10 @@
 
 
 <div class="company">
-    <TextField autocomplete="organization" bind:value={company.name}>{$_(`company.name`)}</TextField>
-    <TextField autocomplete="address-line1" bind:value={company.address}>{$_(`company.address`)}</TextField>
-    <TextField autocomplete="address-line2" bind:value={company.address2}>{$_(`company.address2`)}</TextField>
-    <TextField autocomplete="company-identification-number" bind:value={company.cin}>{$_(`company.cin`)}</TextField>
-    <TextField autocomplete="tax-identification-number" bind:value={company.tin}>{$_(`company.tin`)}</TextField>
+    <TextField class="mb-3" autocomplete="organization" bind:value={company.name}>{$_(`company.name`)}</TextField>
+    <TextField class="mb-3" autocomplete="address-line1" bind:value={company.address}>{$_(`company.address`)}</TextField>
+    <TextField class="mb-3" autocomplete="address-line2" bind:value={company.address2}>{$_(`company.address2`)}</TextField>
+    <TextField class="mb-3" autocomplete="company-identification-number" bind:value={company.cin}>{$_(`company.cin`)}</TextField>
+    <TextField class="mb-3" autocomplete="tax-identification-number" bind:value={company.tin}>{$_(`company.tin`)}</TextField>
     <CustomSelect bind:value={company.country} items={countries}>{$_(`company.country`)}</CustomSelect>
 </div>

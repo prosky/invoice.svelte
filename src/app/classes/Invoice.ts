@@ -71,7 +71,7 @@ export interface InvoiceInterface {
 	products: Product[]
 	currency: string
 	notes: string
-	term: string
+	terms: string
 }
 
 
@@ -98,7 +98,7 @@ export default class Invoice extends Entity implements InvoiceInterface {
 
 	currency= undefined;
 	notes = '';//'It was great doing business with you.',
-	term = '';//'Please make the payment by the due date.',
+	terms = '';//'Please make the payment by the due date.',
 
 	paymentMethod = '';
 

@@ -21,7 +21,10 @@ export default {
         download_pdf: "Stáhnout PDF",
         show_pdf: 'Zobrazit PDF',
         delete: 'Odstranit',
-        add_product: 'Přidat produkt'
+        add_product: 'Přidat produkt',
+		close: 'Zavřít',
+		update: 'Aktualizovat',
+		reset: "Resetovat"
     },
     company: {
         name: 'Název',
@@ -43,20 +46,38 @@ export default {
         tax: "DPH",
         total: "Celková cena s DPH",
         taxRate: "Daňová sazba",
+		date: "Datum",
+		dueDate: "Datum splatnosti",
         withoutVAT: "Neplátce DPH",
-        withVAT: "Plátce DPH"
+        withVAT: "Plátce DPH",
+		currencies: "Měna",
+		locale: "Jazyk",
+		dateFormat: "Formát data",
+		terms: "Podmínky",
+		//terms: "Podmínky",
+		notes: "Poznámky",
+		//terms: "Podmínky",
     },
     files: {
         name: "Název",
         modifiedTime: "Upraveno",
 
     },
+	imagePicker:{
+		select: 'Zvolte soubor'
+	},
     google: {
+		title: "Google Drive",
+		search: "Vyhledat",
         signIn: 'Sign in with Google',
         signOut: 'Odhlásit',
+		update: "Uložit změny",
+		upload: "Nahrát na server"
     },
     settings: {
-        title: 'Nastavení'
+        title: 'Nastavení',
+		locale: "Jazyk",
+		dateFormat: "Formát data",
     }
 
 }

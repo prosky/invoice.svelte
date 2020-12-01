@@ -1,14 +1,14 @@
 import type Config from "../Config";
 import type Invoice from "./Invoice";
 import type {Writable} from "svelte/store";
-import {writable} from "svelte/store";
+import {get, writable} from "svelte/store";
 import type {StorageInterface} from "./Storage";
 import type DataFactory from "../data/DataFactory";
 import {debounce} from 'lodash';
 import locales from "../data/locales";
 import counter from "../../app/utils/counter";
 import dateFormats from "../data/dateFormats";
-import flashes from "../../components/Flashes/flashes";
+import { doSaveFlash} from "../utils/helpers";
 
 export interface Settings {
 	locale: string;
@@ -39,13 +39,17 @@ export default class Application {
 		this.config = config;
 		this.storage = storage;
 		this.factory = factory;
-		this.saveDebounced = debounce((invoice) => this.save(invoice), 1000);
-		this.saveSettingsDebounced = debounce((settings) => this.saveSettings(settings), 1000);
+		this.saveDebounced = debounce((invoice) => this.save(invoice), 1000,{
+			maxWait: 5000
+		});
+		this.saveSettingsDebounced = debounce((settings) => this.saveSettings(settings), 1000,{
+			maxWait: 5000
+		});
 	}
 
 	save(invoice: Invoice) {
 		counter.increment();
-		console.debug('saving',invoice);
+		//console.debug('saving',invoice);
 		this.storage.save('invoice', invoice)
 		this.lock = false;
 	}
@@ -59,26 +63,14 @@ export default class Application {
 			throw Error('Already initialized');
 		}
 		this.initialized = true;
-		let rawInvoice;
-		try {
-			rawInvoice = this.storage.load('invoice');
-			console.debug('rawInvoice',rawInvoice);
-		} catch (e) {
-			flashes.error(e);
-		}
+		let rawInvoice = doSaveFlash(()=>this.storage.load('invoice'));
 		this.invoice = writable(this.factory.invoice().assign(rawInvoice || {}));
 		this.invoice.subscribe((data: Invoice) => {
-			console.debug('change',data);
 			this.lock = true;
 			this.saveDebounced(data);
 		});
 
-		let rawSettings;
-		try {
-			rawSettings = this.storage.load('settings')
-		} catch (e) {
-			flashes.error(e);
-		}
+		let rawSettings =  doSaveFlash(()=>this.storage.load('settings'));
 		this.settings = writable(rawSettings || Application.defaultSettings());
 		this.settings.subscribe((data: Settings) => {
 			this.saveSettingsDebounced(data);
@@ -96,9 +88,10 @@ export default class Application {
 
 	beforeUnload = (e) => {
 		if (this.lock) {
-			e.preventDefault();
+			this.save(get(this.invoice));
+			/*e.preventDefault();
 			flashes.info('Changes are not saved');
-			e.returnValue = 'Changes are not saved';
+			e.returnValue = 'Changes are not saved';*/
 		}
 	}
 }

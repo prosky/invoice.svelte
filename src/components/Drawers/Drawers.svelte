@@ -5,9 +5,10 @@
 	import GoogleDrive from "../GoogleDrive/GoogleDrive.svelte";
 	import Settings from "../Settings.svelte";
 
-	type Tab = 'settings' | 'drive' | undefined;
+	export type Tab = 'settings' | 'drive' | undefined;
 
-	export let active: Tab;
+	export let active: Tab = undefined;
+
 	const activate = (key?: Tab) => {
 		active = key;
 	}
@@ -25,7 +26,7 @@
 <NavigationDrawer class="d-flex" fixed active={active ==='drive'}>
 	<span slot="prepend">
 		<ListItem>
-			{$_('googleDrive.title')}
+			{$_('google.title')}
 			<span slot="append">
 				<Button icon class="drawer-button primary-text" size="large" depressed block
 						on:click={()=>activate()} title={$_('buttons.close')}>
@@ -48,7 +49,7 @@
 			</span>
 		</ListItem>
 	</span>
-	<Settings class="mt-auto"/>
+	<Settings/>
 </NavigationDrawer>
 
 <style>

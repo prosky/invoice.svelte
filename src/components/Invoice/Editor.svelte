@@ -15,13 +15,13 @@
 	const downloadPDF = () => undefined;
 	const showPDF = () => undefined;
 
-	export let invoice: Writable<Invoice>;
+	export let invoice: Invoice;
 	export let onReset: () => void;
 
 	let format: Formatter;
 	let locale, currency;
 
-	invoice.subscribe((invoice: Invoice) => {
+	$:{
 		if (invoice.locale !== locale || invoice.currency !== currency) {
 			let formatter = new Intl.NumberFormat(invoice.locale, {
 				style: "currency",
@@ -34,7 +34,7 @@
 		}
 		locale = invoice.locale;
 		currency = invoice.currency;
-	});
+	}
 
 </script>
 
@@ -59,25 +59,25 @@
 </style>
 
 <div>
-	<span class="secondary-text">#{$invoice.hash}</span>
-	<span class="secondary-text">#{$invoice.fileId}</span>
+	<span class="secondary-text">#{invoice.hash}</span>
+	<span class="secondary-text">#{invoice.fileId}</span>
 	<Row>
 		<Col>
-			<CustomSelect required bind:value={$invoice.currency}
+			<CustomSelect required bind:value={invoice.currency}
 						  items={currencies}> {$_('invoice.currencies')}</CustomSelect>
 		</Col>
 		<Col>
-			<Switch bind:checked={$invoice.withVAT}>
-				{$_(`invoice.${$invoice.withVAT ? 'withVAT' : 'withoutVAT'}`)}
+			<Switch bind:checked={invoice.withVAT}>
+				{$_(`invoice.${invoice.withVAT ? 'withVAT' : 'withoutVAT'}`)}
 			</Switch>
 		</Col>
 		<Col>
-			<CustomSelect required bind:value={$invoice.locale} items={locales}>
+			<CustomSelect required bind:value={invoice.locale} items={locales}>
 				{$_('invoice.locale')}
 			</CustomSelect>
 		</Col>
 		<Col>
-			<TextField bind:value={$invoice.dateFormat}>
+			<TextField bind:value={invoice.dateFormat}>
 				{$_('invoice.dateFormat')}
 			</TextField>
 		</Col>

@@ -1,6 +1,5 @@
 <script lang="ts">
-    import {Select} from "svelte-materialify";
-    import * as rules from "../../app/utils/rules";
+    import {Select} from "svelte-materialify/src";
 
     type T = unknown;
 
@@ -20,6 +19,6 @@
 </script>
 
 
-<Select {rules} bind:value={val} {format} items={values(items)} {...$$restProps}>
+<Select bind:value={val} {format} items={values(items)} {...$$restProps}>
     <slot/>
 </Select>

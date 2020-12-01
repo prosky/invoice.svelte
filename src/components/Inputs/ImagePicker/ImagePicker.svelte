@@ -49,7 +49,7 @@
             {#if value}
                 <img alt="Preview" src={value}>
             {:else}
-                <span>Select logo</span>
+                <span>{$_('imagePicker.select')}</span>
             {/if}
         </span>
     </DropZone>

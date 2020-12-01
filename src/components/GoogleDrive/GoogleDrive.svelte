@@ -187,7 +187,7 @@
 	<TextField dense filled clearable bind:value={query}
 			   on:change={delaySearch} on:blur={()=>listFiles()}
 			   on:keyup={(e)=>e.key==='Enter' && listFiles()}>
-		{$_('search')}
+		{$_('google.search')}
 		<span slot="append">
                 <Button icon on:click={()=>listFiles(true)} title={$_('buttons.update')}>
                     <Icon path={mdiSyncCircle}/>
