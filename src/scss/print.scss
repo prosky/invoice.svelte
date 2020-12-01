@@ -1,0 +1,8 @@
+@media print {
+	*:not(.print):not(.page *) {
+		display: block;
+	}
+	.page{
+		box-shadow: none;
+	}
+}

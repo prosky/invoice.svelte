@@ -8,7 +8,8 @@ import {debounce} from 'lodash';
 import locales from "../data/locales";
 import counter from "../../app/utils/counter";
 import dateFormats from "../data/dateFormats";
-import { doSaveFlash} from "../utils/helpers";
+import {doSave} from "../utils/helpers";
+import flashes from "../../components/Flashes/flashes";
 
 export interface Settings {
 	locale: string;
@@ -39,10 +40,10 @@ export default class Application {
 		this.config = config;
 		this.storage = storage;
 		this.factory = factory;
-		this.saveDebounced = debounce((invoice) => this.save(invoice), 1000,{
+		this.saveDebounced = debounce((invoice) => this.save(invoice), 1000, {
 			maxWait: 5000
 		});
-		this.saveSettingsDebounced = debounce((settings) => this.saveSettings(settings), 1000,{
+		this.saveSettingsDebounced = debounce((settings) => this.saveSettings(settings), 1000, {
 			maxWait: 5000
 		});
 	}
@@ -59,30 +60,29 @@ export default class Application {
 	}
 
 	initialize() {
-		if(this.initialized){
+		if (this.initialized) {
 			throw Error('Already initialized');
 		}
 		this.initialized = true;
-		let rawInvoice = doSaveFlash(()=>this.storage.load('invoice'));
-		this.invoice = writable(this.factory.invoice().assign(rawInvoice || {}));
+		const rawInvoice = doSave(() => this.storage.load('invoice'), {}, flashes.error);
+		this.invoice = writable(this.factory.invoice().assign(rawInvoice));
 		this.invoice.subscribe((data: Invoice) => {
 			this.lock = true;
 			this.saveDebounced(data);
 		});
-
-		let rawSettings =  doSaveFlash(()=>this.storage.load('settings'));
-		this.settings = writable(rawSettings || Application.defaultSettings());
+		const rawSettings = doSave(() => this.storage.load('settings'), Application.defaultSettings, flashes.error);
+		this.settings = writable(rawSettings);
 		this.settings.subscribe((data: Settings) => {
 			this.saveSettingsDebounced(data);
 		});
 		window.addEventListener("beforeunload", this.beforeUnload);
 	}
 
-	clear() {
-		this.setData({});
+	newInvoice() {
+		this.setData();
 	}
 
-	setData(data: Object) {
+	setData(data?: Object) {
 		this.invoice.set(this.factory.invoice().assign(data));
 	}
 

@@ -7,7 +7,7 @@
     import {DropzoneOptions} from "dropzone";
     import {error} from "../../Flashes/flashes";
 
-    export let value: string;
+    export let value: string | null;
     export let maxWidth: number | undefined = 360;
     export let maxHeight: number | undefined = 360;
 

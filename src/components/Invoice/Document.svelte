@@ -14,7 +14,7 @@
 </script>
 
 
-<div class="invoice">
+<div class="document">
     <Row class="mb-4">
         <Col>
             <Row>
@@ -50,9 +50,11 @@
     </Row>
     <Row class="mb-4">
         <Col>
+			<TextField class="mb-3"  placeholder={$_('invoice.company')} bind:value={invoice.labels.company}/>
             <Company bind:company={invoice.company}/>
         </Col>
         <Col>
+			<TextField class="mb-3"  placeholder={$_('invoice.client')} bind:value={invoice.labels.client}/>
             <Company bind:company={invoice.client}/>
         </Col>
     </Row>
@@ -71,8 +73,10 @@
         <Textarea  bind:value={invoice.terms} rows={3}/>
 </div>
 </div>
-<style >
-  .invoice {
-    position: relative;
-  }
+
+<style>
+	.document{
+		position: relative;
+		--theme-text-fields-border: transparent;
+	}
 </style>

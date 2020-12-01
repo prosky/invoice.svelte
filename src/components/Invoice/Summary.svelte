@@ -35,7 +35,7 @@
             <td>{format(tax)}</td>
         </tr>
         </tbody>
-        <tbody class="red">
+        <tbody>
         <tr>
             <th>
                 <TextField bind:value={invoice.labels.total} placeholder={$_(`invoice.total`)}/>

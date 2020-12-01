@@ -32,16 +32,17 @@ export const flashMessage = (message: string, type?: string, section?: string) =
 	return flash;
 };
 
-interface T {
+interface Message {
 	(message: string): FlashMessage,
-	section: X
+
+	section: Section
 }
 
-interface X {
+interface Section {
 	(section: string): (message: string) => FlashMessage,
 }
 
-function create(type: string): T {
+function create(type: string): Message {
 	const factory = (message: string) => flashMessage(message, type);
 	factory.section = (section: string) => (message: string) => flashMessage(message, type, section);
 	return factory;
@@ -54,6 +55,5 @@ export const error = create('error');
 export const remove = (message: FlashMessage) => update((value) => value.filter(val => val !== message));
 export const reset = () => set([]);
 export const store = {subscribe, flashMessage, reset, remove};
-export default {
-	info, warning, error, flashMessage
-};
+
+export default {info, warning, error, flashMessage};

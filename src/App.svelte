@@ -6,6 +6,7 @@
 	import Flashes from "./components/Flashes/Flashes.svelte";
 	import Debugger from "./components/Debugger/Debugger.svelte";
 	import type Application from "./app/classes/Application";
+	import Print from "./pages/Print.svelte";
 
 	/*
 	export let basePath: string;
@@ -16,21 +17,25 @@
 	];*/
 	export let theme = 'dark';
 	export let application: Application;
+	export let print = false;
+
+	const onPrint = () => {
+		print = true;
+	}
 
 </script>
 
-
 <MaterialApp {theme}>
-	<Debugger>
-		<Button title="Saves count" size="small" disabled icon class="primary-color">{$counter}</Button>
-	</Debugger>
-	<Flashes/>
-	<main>
-		<Home {application}/>
-	</main>
+	{#if print}
+		<Print {application}/>
+	{:else}
+		<Debugger>
+			<Button title="Saves count" size="small" disabled icon class="primary-color">{$counter}</Button>
+		</Debugger>
+		<Flashes/>
+		<main>
+			<Home {application} {onPrint}/>
+		</main>
+	{/if}
 </MaterialApp>
-
-<style type="scss">
-
-</style>
 

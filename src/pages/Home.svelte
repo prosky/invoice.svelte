@@ -6,6 +6,8 @@
 	import Invoice from "../app/classes/Invoice";
 
 	export let application: Application;
+	export let onPrint;
+
 	let invoice: Invoice;
 	application.invoice.subscribe((inv: Invoice) => {
 		invoice = inv;
@@ -13,16 +15,16 @@
 	$: {
 		application.invoice.update(() => invoice);
 	}
-	const onReset = () => {
-		application.clear();
+	const onNewFile = () => {
+		application.newInvoice();
 	}
 </script>
 
 <div class="content">
 	<Drawers/>
-	<div class="wrapper pt-8 pb-8">
+	<div class="wrapper print pt-8 pb-8">
 		<h1 class="primary-text text-h1 text-center mb-10">{$_('page.home.title')}</h1>
-		<Editor bind:invoice {onReset}/>
+		<Editor bind:invoice {onNewFile} {onPrint}/>
 	</div>
 </div>
 <style>

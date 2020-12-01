@@ -1,8 +1,9 @@
-import dateFormats from "./dateFormats";
-import {currencies} from "./currencies";
 import Invoice from "../classes/Invoice";
 import Product from "../classes/Product";
+
 import countries from "./countries";
+import currencies from "./currencies";
+import dateFormats from "./dateFormats";
 
 function uid(){
 	return Math.random().toString(36).substring(7);

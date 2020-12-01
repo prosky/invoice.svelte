@@ -211,23 +211,27 @@
 		{/each}
 	</div>
 	{#if invoice.fileId}
-		<Button disabled={uploading} active={uploading} size="large" depressed block on:click={()=>update()}
+		<Button disabled={uploading}  size="large" depressed block on:click={()=>update()}
 				class="primary-text">
-			{#if uploading}
-				<ProgressCircular size={24} indeterminate color="primary mr-3"/>
-			{:else}
-				<Icon class="primary mr-3" path="{mdiCloudUpload}"/>
-			{/if}
+				<span class="mr-3">
+					{#if uploading}
+						<ProgressCircular size={24} indeterminate color="primary"/>
+					{:else}
+						<Icon class="primary" path="{mdiCloudUpload}"/>
+					{/if}
+				</span>
 			{$_('google.update')}
 		</Button>
 	{:else}
-		<Button disabled={uploading} active={uploading} size="large" depressed block on:click={()=>upload()}
+		<Button disabled={uploading}  size="large" depressed block on:click={()=>upload()}
 				class="primary-text">
-			{#if uploading}
-				<ProgressCircular size={24} indeterminate color="primary mr-3"/>
-			{:else}
-				<Icon class="primary mr-3" path="{mdiCloudUpload}"/>
-			{/if}
+			<span class="mr-3">
+				{#if uploading}
+					<ProgressCircular size={24} indeterminate color="primary"/>
+				{:else}
+					<Icon class="primary" path="{mdiCloudUpload}"/>
+				{/if}
+			</span>
 			{$_('google.upload')}
 		</Button>
 	{/if}
