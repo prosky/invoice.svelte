@@ -13,8 +13,9 @@
 	});
 </script>
 <script lang="ts">
-	import type GoogleUser from 'gapi.auth2.';
-	import type BasicProfile from 'gapi.auth2';
+	import GoogleUser = gapi.auth2.GoogleUser;
+	import BasicProfile = gapi.auth2.BasicProfile;
+
 	import type {Writable} from "svelte/store";
 	import type Invoice from "../../app/classes/Invoice";
 	import type {Settings} from "../../app/classes/Application";
@@ -45,15 +46,14 @@
 	let query: string;
 	let uploading: boolean = false;
 	let invoice: Invoice;
-
 	let settings: Settings;
+
 	app.invoice.subscribe((data: Invoice) => {
 		invoice = data;
 	});
 	app.settings.subscribe((data: Settings) => {
 		settings = data;
 	});
-
 
 	let config = {
 		clientId: app.config.googleClientId,
@@ -101,6 +101,7 @@
 	const onSignOut = (event: CustomEvent) => {
 		user = null;
 		profile = null;
+		GDrive.setAccessToken(undefined);
 	}
 
 	const download = async (file: GoogleFileMeta) => {

@@ -25,21 +25,21 @@
 		<thead>
 		<tr>
 			<th>
-				<TextField bind:value={invoice.labels.description} placeholder={$_('invoice.product.description')}/>
+				<TextField bind:value={invoice.labels.products.description} placeholder={$_('invoice.products.description')}/>
 			</th>
 			<th>
-				<TextField bind:value={invoice.labels.quantity} placeholder={$_('invoice.product.quantity')}/>
+				<TextField bind:value={invoice.labels.products.quantity} placeholder={$_('invoice.products.quantity')}/>
 			</th>
 			<th>
-				<TextField bind:value={invoice.labels.price} placeholder={$_('invoice.product.price')}/>
+				<TextField bind:value={invoice.labels.products.price} placeholder={$_('invoice.products.price')}/>
 			</th>
 			{#if invoice.withVAT}
 				<th>
-					<TextField bind:value={invoice.labels.taxRate} placeholder={$_('invoice.product.taxRate')}/>
+					<TextField bind:value={invoice.labels.products.taxRate} placeholder={$_('invoice.products.taxRate')}/>
 				</th>
 			{/if}
 			<th>
-				<TextField bind:value={invoice.labels.sum} placeholder={$_('invoice.product.sum')}/>
+				<TextField bind:value={invoice.labels.products.sum} placeholder={$_('invoice.products.sum')}/>
 			</th>
 			<th class="no-print"></th>
 		</tr>
@@ -49,7 +49,7 @@
 			<tr>
 				<td>
                 <Textarea rows={1} autogrow bind:value={product.description}
-						  placeholder={$_('invoice.product.description')}/>
+						  placeholder={$_('invoice.products.description')}/>
 				</td>
 				<td>
 					<TextField type="number" bind:value={product.quantity}/>

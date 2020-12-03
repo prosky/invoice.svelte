@@ -1,49 +1,39 @@
-import Company from "./Company";
 import type Product from "./Product";
+import Company from "./Company";
 import Entity from "./Entity";
 
-export interface InvoiceLabels {
-	title: string
-	date: string
-	dueDate: string
-	company: string
-	client: string
 
-	//ProductLine
-	description: string,
-	quantity: string,
-	price: string,
-	taxRate: string,
-	sum: string,
-
-	//Summary
-	tax: string,
-	subTotal: string,
-	total: string,
-
-	//Notes
-	notes: string,
-	terms: string
+export class ProductLabels extends Entity {
+	description: string = undefined
+	quantity: string = undefined
+	price: string = undefined
+	taxRate: string = undefined
+	sum: string = undefined
 }
 
-const defaultLabels: InvoiceLabels = {
-	title: 'Invoice#',
-	date: 'Invoice Date',
-	dueDate: 'Due Date',
-	company: 'Company:',//Dodavatel
-	client: 'Client:',//Odběratel
+export class InvoiceLabels extends Entity {
+	title: string = undefined
+	date: string = undefined
+	dueDate: string = undefined
+	company: string = undefined
+	client: string = undefined
 
-	description: 'Item Description',
-	quantity: 'Quantity',
-	price: 'Price',
-	taxRate: 'Tax Rate',
-	sum: 'Sum',
-	tax: 'Sale Tax',
-	subTotal: 'Sub Total',
-	total: 'TOTAL',
-	notes: '',
-	terms: ''
-};
+	//ProductLine
+	products: ProductLabels = new ProductLabels();
+
+	//Summary
+	tax: string = undefined
+	subTotal: string = undefined
+	total: string = undefined
+
+	//Notes
+	notes: string = undefined
+	terms: string = undefined
+
+	setProducts(productLabels: ProductLabels) {
+		this.products.assign(productLabels);
+	}
+}
 
 export interface InvoiceInterface {
 
@@ -80,14 +70,14 @@ export default class Invoice extends Entity implements InvoiceInterface {
 	hash = undefined;
 	fileId = undefined;
 	logo = undefined;
-	labels = defaultLabels;
+	labels = undefined;
 
 	locale = undefined;
 	dateFormat: string;
 	withVAT = false;
-	title = 'INVOICE';
-	name = '';
-	accountNumber = '';
+	title = undefined;
+	name = undefined;
+	accountNumber = undefined;
 
 	date = new Date();
 	dueDate = new Date();
@@ -96,18 +86,19 @@ export default class Invoice extends Entity implements InvoiceInterface {
 	company: Company;
 	client: Company;
 
-	currency= undefined;
+	currency = undefined;
 	notes = '';//'It was great doing business with you.',
 	terms = '';//'Please make the payment by the due date.',
 
 	paymentMethod = '';
 
-	constructor(hash: string, country: string, currency: string, locale: string, dateformat: string) {
+	constructor(hash: string, country: string, currency: string, locale: string, dateformat: string, labels: InvoiceLabels) {
 		super();
 		this.hash = hash;
 		this.locale = locale;
 		this.currency = currency;
 		this.dateFormat = dateformat;
+		this.labels = labels;
 		this.company = new Company(country);
 		this.client = new Company(country);
 	}

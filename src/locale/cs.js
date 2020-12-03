@@ -24,7 +24,8 @@ export default {
         add_product: 'Přidat produkt',
 		close: 'Zavřít',
 		update: 'Aktualizovat',
-		reset: "Resetovat"
+		reset: "Resetovat",
+		new_file: "Nový soubor"
     },
     company: {
         name: 'Název',
@@ -36,16 +37,18 @@ export default {
     },
     invoice: {
         title: 'Název',
-        product: {
+        products: {//Placeholders
             description: 'Popis',
             quantity: 'Množství',
             price: 'Cena',
-            sum: 'Součet',
+            sum: 'Celkem',
+			taxRate: "Daňová sazba",
         },
-        subTotal: "Celková cena bez DPH",
+		client: 'Odběratel',
+		company: 'Dodavalel',
+        subTotal: "Základ",
         tax: "DPH",
-        total: "Celková cena s DPH",
-        taxRate: "Daňová sazba",
+        total: "Celkem k úhradě",
 		date: "Datum",
 		dueDate: "Datum splatnosti",
         withoutVAT: "Neplátce DPH",
@@ -58,6 +61,29 @@ export default {
 		notes: "Poznámky",
 		//terms: "Podmínky",
     },
+	defaultValues:{
+    	invoice:{
+			labels:{
+				title: 'Invoice#',
+				client: 'Odběratel',
+				company: 'Dodavalel',
+				subTotal: "Základ",
+				tax: "DPH",
+				total: "Celkem k úhradě",
+				date: "Datum",
+				dueDate: "Datum splatnosti",
+				terms: "Podmínky",
+				notes: "Poznámky",
+				products: {
+					taxRate: "Daňová sazba",
+					description: 'Popis',
+					quantity: 'Množství',
+					price: 'Cena',
+					sum: 'Celkem',
+				},
+			}
+		}
+	},
     files: {
         name: "Název",
         modifiedTime: "Upraveno",
