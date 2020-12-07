@@ -11,14 +11,14 @@ import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import url from '@rollup/plugin-url';
 import postcss from 'rollup-plugin-postcss';
-/*
+
 import alias from '@rollup/plugin-alias';
 import path from 'path';
 
 const ROOT_DIR = __dirname;
 const SRC_DIR = path.resolve(ROOT_DIR, 'src');
 const PUBLIC_DIR = path.resolve(ROOT_DIR, 'public');
-*/
+
 
 
 const production = !process.env.ROLLUP_WATCH;
@@ -53,14 +53,14 @@ export default {
 		file: 'public/build/bundle.js'
 	},
 	plugins: [
-		/*alias({
+		alias({
 			resolve: ['.svelte', '.ts'],
 			entries: [
-				{find: '@src', replacement: SRC_DIR},
-				{find: '@app', replacement: path.resolve(SRC_DIR, 'app')},
-				{find: '@components', replacement: path.resolve(SRC_DIR, 'components')},
+				{find: 'src', replacement: SRC_DIR},
+				{find: 'app', replacement: path.resolve(SRC_DIR, 'app')},
+				{find: 'components', replacement: path.resolve(SRC_DIR, 'components')},
 			],
-		}),*/
+		}),
 		svelte({
 			compilerOptions: {
 				dev: !production,
@@ -128,11 +128,6 @@ export default {
 		production && terser(),
 	],
 	watch: {
-		exclude: ['node_modules/**'],
-		clearScreen: false,
-		chokidar: {
-			usePolling: true,
-			interval: 10,
-		}
+		clearScreen: false
 	}
 };

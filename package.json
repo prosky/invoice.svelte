@@ -21,6 +21,7 @@
     "@rollup/plugin-typescript": "^8.0.0",
     "@rollup/plugin-url": "^6.0.0",
     "@tsconfig/svelte": "^1.0.10",
+    "@types/crypto-js": "^4.0.1",
     "@types/dropzone": "^5.7.3",
     "@types/gapi": "^0.0.39",
     "@types/gapi.auth2": "^0.0.52",
@@ -31,6 +32,7 @@
     "@types/sortablejs": "^1.10.6",
     "autoprefixer": "^10.0.4",
     "chokidar": "^3.4.3",
+    "crypto-js": "^3.3.0",
     "date-fns": "^2.16.1",
     "dropzone": "^5.7.2",
     "gapi-script": "^1.0.2",
@@ -40,20 +42,20 @@
     "lodash": "^4.17.20",
     "node-sass": "^5.0.0",
     "pdfmake": "^0.1.68",
-    "postcss": "^8.1.13",
-    "rollup": "^2.34.1",
+    "postcss": "^8.1.14",
+    "rollup": "^2.34.2",
     "rollup-plugin-livereload": "^2.0.0",
-    "rollup-plugin-postcss": "^3.1.8",
+    "rollup-plugin-postcss": "^4.0.0",
     "rollup-plugin-scss": "^2.6.1",
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-url": "^3.0.1",
-    "sass": "^1.29.0",
+    "sass": "^1.30.0",
     "scss": "^0.2.4",
     "simple-common-utils": "^2.2.0",
     "sortablejs": "^1.12.0",
     "svelte": "^3.31.0",
-    "svelte-check": "^1.1.18",
+    "svelte-check": "^1.1.19",
     "svelte-i18n": "^3.3.0",
     "svelte-materialify": "^0.3.4",
     "svelte-preprocess": "^4.6.1",
@@ -63,7 +65,7 @@
     "utf8": "^3.0.0"
   },
   "dependencies": {
-    "sirv-cli": "^1.0.8"
+    "sirv-cli": "^1.0.9"
   },
   "browserslist": {
     "production": [

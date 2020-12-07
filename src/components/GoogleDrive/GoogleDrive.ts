@@ -10,9 +10,10 @@ export const listFiles = async (searchTerm: string | null = null): Promise<Googl
 	console.debug(`searching "${searchTerm}"`);
     const response: gapi.client.Response<gapi.client.drive.FileList> = await gapi.client.drive.files.list({
         pageSize: 10,
-        fields: 'nextPageToken, files(id, name, mimeType, modifiedTime, webContentLink)',
+        fields: 'nextPageToken, files(id, name, mimeType, modifiedTime,createdTime, md5Checksum)',
         q: searchTerm,
     });
+    console.log(response.result.files);
     return <GoogleFileMeta[]>response.result.files;
 };
 

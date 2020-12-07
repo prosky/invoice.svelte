@@ -79,8 +79,8 @@ export default class Invoice extends Entity implements InvoiceInterface {
 	name = undefined;
 	accountNumber = undefined;
 
-	date = new Date();
-	dueDate = new Date();
+	date = undefined;
+	dueDate = undefined;
 	products = [];
 
 	company: Company;
@@ -92,9 +92,11 @@ export default class Invoice extends Entity implements InvoiceInterface {
 
 	paymentMethod = '';
 
-	constructor(hash: string, country: string, currency: string, locale: string, dateformat: string, labels: InvoiceLabels) {
+	constructor(hash: string, date: Date, dueDate: Date, country: string, currency: string, locale: string, dateformat: string, labels: InvoiceLabels) {
 		super();
 		this.hash = hash;
+		this.date = date;
+		this.dueDate = dueDate;
 		this.locale = locale;
 		this.currency = currency;
 		this.dateFormat = dateformat;

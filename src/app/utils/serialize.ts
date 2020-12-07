@@ -1,4 +1,4 @@
-export const serialize = (cond: object) => JSON.stringify(cond, function (k, v) {
+export const serialize = (cond: any) => JSON.stringify(cond, function (k, v) {
     const v0 = this[k]
     if (v0) {
         if (v0 instanceof Date) {

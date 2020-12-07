@@ -2,14 +2,16 @@ import type Config from "../Config";
 import type Invoice from "./Invoice";
 import type {Writable} from "svelte/store";
 import {get, writable} from "svelte/store";
+import {locale} from 'svelte-i18n';
 import type {StorageInterface} from "./Storage";
 import type DataFactory from "../data/DataFactory";
 import {debounce} from 'lodash';
 import locales from "../data/locales";
 import counter from "../../app/utils/counter";
-import dateFormats from "../data/dateFormats";
+import {dateTime as dateFormats} from "../data/dateFormats";
 import {doSave} from "../utils/helpers";
 import flashes from "../../components/Flashes/flashes";
+import format from '../../app/utils/currencyFormatter';
 
 export interface Settings {
 	locale: string;
@@ -24,7 +26,7 @@ export default class Application {
 	invoice: Writable<Invoice>;
 	settings: Writable<Settings>;
 
-	saveDebounced: (invoice: Invoice) => void;
+	saveDebounced: () => void;
 	saveSettingsDebounced: (settings: Settings) => void;
 
 	lock: boolean = false;
@@ -40,7 +42,7 @@ export default class Application {
 		this.config = config;
 		this.storage = storage;
 		this.factory = factory;
-		this.saveDebounced = debounce((invoice) => this.save(invoice), 1000, {
+		this.saveDebounced = debounce(() => this.save(), 1000, {
 			maxWait: 5000
 		});
 		this.saveSettingsDebounced = debounce((settings) => this.saveSettings(settings), 1000, {
@@ -48,10 +50,10 @@ export default class Application {
 		});
 	}
 
-	save(invoice: Invoice) {
+	save() {
 		counter.increment();
 		//console.debug('saving',invoice);
-		this.storage.save('invoice', invoice)
+		this.storage.save('invoice', get(this.invoice))
 		this.lock = false;
 	}
 
@@ -63,19 +65,36 @@ export default class Application {
 		if (this.initialized) {
 			throw Error('Already initialized');
 		}
-		this.initialized = true;
 		const rawInvoice = doSave(() => this.storage.load('invoice'), {}, flashes.error);
 		this.invoice = writable(this.factory.invoice().assign(rawInvoice));
-		this.invoice.subscribe((data: Invoice) => {
-			this.lock = true;
-			this.saveDebounced(data);
+		this.invoice.subscribe((invoice) => {
+			format.setInvoice(invoice);
+			if (this.initialized) {
+				this.lock = true;
+				this.saveDebounced();
+			}
 		});
 		const rawSettings = doSave(() => this.storage.load('settings'), Application.defaultSettings, flashes.error);
 		this.settings = writable(rawSettings);
 		this.settings.subscribe((data: Settings) => {
-			this.saveSettingsDebounced(data);
+			locale.set(data.locale);
+			if (this.initialized) {
+				this.saveSettingsDebounced(data);
+			}
 		});
 		window.addEventListener("beforeunload", this.beforeUnload);
+		window.addEventListener("keypress", this.onKeypress);
+		this.initialized = true;
+	}
+
+	onKeypress = (event: KeyboardEvent) => {
+		if (event.ctrlKey || event.metaKey) {
+			if (event.key.toLowerCase() === 's') {
+				this.save();
+				return false;
+			}
+		}
+		return true;
 	}
 
 	newInvoice() {
@@ -88,7 +107,7 @@ export default class Application {
 
 	beforeUnload = (e) => {
 		if (this.lock) {
-			this.save(get(this.invoice));
+			this.save();
 			/*e.preventDefault();
 			flashes.info('Changes are not saved');
 			e.returnValue = 'Changes are not saved';*/

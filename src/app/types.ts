@@ -4,5 +4,7 @@ export interface GoogleFileMeta {
     name: string
     mimeType: string
     modifiedTime: string
-    webContentLink: string
+	createdTime: string
+	md5Checksum: string
+    //webContentLink: string
 }

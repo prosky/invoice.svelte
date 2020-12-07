@@ -10,52 +10,49 @@
 	import locales from "../../app/data/locales";
 	import currencies from "../../app/data/currencies";
 	import InvoiceComponent from "./Document.svelte";
+	import {dateFormat as dateFormatRule} from 'app/utils/rules';
+	import format from 'app/utils/currencyFormatter';
 
 	const downloadPDF = () => undefined;
 	const showPDF = () => undefined;
+
 	export let invoice: Invoice;
-	export let onReset: () => void;
 	export let onNewFile: () => void;
 	export let onPrint: () => void;
 
-	let format: Formatter;
-	let locale, currency;
-
-	$:{
-		if (invoice.locale !== locale || invoice.currency !== currency) {
-			let formatter = new Intl.NumberFormat(invoice.locale, {
-				style: "currency",
-				currency: invoice.currency,
-			});
-			format = (number: number, sign: boolean = false) => {
-				if (sign) return formatter.format(number);
-				return number.toLocaleString(invoice.locale, {minimumFractionDigits: 2});
-			};
-		}
-		locale = invoice.locale;
-		currency = invoice.currency;
-	}
 
 </script>
 
 <style>
-	.editor,.container{
+	.editor, .container {
 		position: relative;
 	}
+
 	aside {
 		position: absolute;
 		right: 100%;
 		top: 0;
 		margin-right: 1rem;
 	}
+
 	@media print {
 		:global(.no-print) {
 			display: none;
 		}
-		:global(label.active){
+		:global(.no-print) {
+			display: none;
+		}
+
+		:global(label.active) {
 			display: none !important;
 		}
-		:global(.s-icon){
+		:global(::placeholder) {
+			color: transparent !important;
+		}
+		:global(textarea) {
+			resize: none !important;
+		}
+		:global(.s-select .s-icon) {
 			display: none !important;
 		}
 		.page {
@@ -85,7 +82,7 @@
 				</CustomSelect>
 			</Col>
 			<Col>
-				<TextField bind:value={invoice.dateFormat}>
+				<TextField bind:value={invoice.dateFormat} rules={[dateFormatRule]}>
 					{$_('invoice.dateFormat')}
 				</TextField>
 			</Col>
@@ -121,7 +118,7 @@
 			</nav>
 		</aside>
 		<MaterialApp theme="light">
-			<InvoiceComponent bind:invoice bind:format/>
+			<InvoiceComponent bind:invoice />
 		</MaterialApp>
 	</div>
 </div>

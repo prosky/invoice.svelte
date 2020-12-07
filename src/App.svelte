@@ -22,19 +22,24 @@
 	const onPrint = () => {
 		print = true;
 	}
-
+	const onPrintCancel = () => {
+		print = false;
+	}
+	const onNewFile = () => {
+		application.newInvoice();
+	}
 </script>
 
 <MaterialApp {theme}>
 	{#if print}
-		<Print {application}/>
+		<Print {application} {onPrintCancel}/>
 	{:else}
 		<Debugger>
 			<Button title="Saves count" size="small" disabled icon class="primary-color">{$counter}</Button>
 		</Debugger>
 		<Flashes/>
 		<main>
-			<Home {application} {onPrint}/>
+			<Home invoice={application.invoice} {onPrint} {onNewFile}/>
 		</main>
 	{/if}
 </MaterialApp>

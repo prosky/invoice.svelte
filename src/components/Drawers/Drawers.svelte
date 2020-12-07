@@ -6,12 +6,9 @@
 	import Settings from "../Settings.svelte";
 
 	export type Tab = 'settings' | 'drive' | undefined;
-
 	export let active: Tab = undefined;
 
-	const activate = (key?: Tab) => {
-		active = key;
-	}
+	const activate = (key?: Tab) => active = key;
 
 </script>
 

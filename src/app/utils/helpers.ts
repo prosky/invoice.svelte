@@ -13,3 +13,15 @@ export const doSave = (what: Function, def?: any, err?: (e: any) => void) => {
 		return ret()
 	}
 }
+export const saveCallback = (what: Function, err?: (e: any) => void, fin?: () => void) => {
+	return async (...args) => {
+		try {
+			return await what(...args);
+		} catch (e) {
+			console.debug(e);
+			err && err(e);
+		}finally {
+			fin && fin();
+		}
+	}
+}

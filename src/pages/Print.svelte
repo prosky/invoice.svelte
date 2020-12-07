@@ -5,6 +5,7 @@
 	import {onMount} from "svelte";
 
 	export let application: Application;
+	export let onPrintCancel: () => void;
 
 	let invoice: Invoice;
 	application.invoice.subscribe((inv: Invoice) => {
@@ -12,7 +13,9 @@
 	});
 	onMount(() => {
 		setTimeout(() => {
+			//window.addEventListener('focus', onPrintCancel, {once: true});
 			window.print();
+			onPrintCancel();
 		}, 500);
 	});
 </script>

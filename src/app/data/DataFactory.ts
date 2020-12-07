@@ -15,6 +15,12 @@ function uid() {
 	return Math.random().toString(36).substring(7);
 }
 
+function date(days = 0) {
+	const date = new Date();
+	days && date.setDate(date.getDate() + days);
+	return date;
+}
+
 const DEFAULT_LOCALE = 'en-EN';
 
 export default class DataFactory {
@@ -47,7 +53,7 @@ export default class DataFactory {
 		return labels.assign(values);
 	}
 
-	invoice = (): Invoice => new Invoice(uid(), this.country, this.currency, this.locale, this.dateFormat, this.invoiceLabels())
+	invoice = (): Invoice => new Invoice(uid(), date(), date(14), this.country, this.currency, this.locale, this.dateFormat, this.invoiceLabels())
 	product = (): Product => new Product(uid(), '', 0.00, 1, 21)
 
 

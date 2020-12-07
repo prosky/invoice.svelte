@@ -85,8 +85,21 @@
 	:global(.products input){
 		text-align: right;
 	}
+	table{
+		position: relative;
+	}
 	td:not(:first-of-type){
 		text-align: right;
+	}
+	th:last-child{
+		width: 0;
+	}
+	td:last-child{
+		position: absolute;
+		right: 0;
+		transform: translateX(100%);
+		z-index: 1;
+		margin-top: .5em;
 	}
 </style>
 

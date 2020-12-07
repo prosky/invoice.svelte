@@ -6,9 +6,9 @@
 	const MIME = 'application/json';
 	const cache = new SimpleCache<string, GoogleFileMeta[]>();
 	const fileInfo = (invoice: Invoice) => ({
-		'title': `${invoice.title}`,
-		'name': `${invoice.title}`,
-		'filename': `${invoice.title}.json`,
+		//'title': `${invoice.title}`,
+		'name': `${invoice.title || invoice.hash}.json`,
+		//'filename': `${invoice.title}.json`,
 		'mimeType': MIME
 	});
 </script>
@@ -17,24 +17,24 @@
 	import BasicProfile = gapi.auth2.BasicProfile;
 
 	import type {Writable} from "svelte/store";
-	import type Invoice from "../../app/classes/Invoice";
-	import type {Settings} from "../../app/classes/Application";
+	import type Invoice from "app/classes/Invoice";
+	import type {Settings} from "app/classes/Application";
 
-	import {_} from "svelte-i18n";
+	import {_, date} from "svelte-i18n";
 	import {debounce} from 'lodash';
 	import parseISO from "date-fns/parseISO";
-	import format from "date-fns/format";
 	import GoogleAuth from "./GoogleAuth.svelte";
 	import app from "../../app";
 	import * as GoogleDrive from "./GoogleDrive";
 	import {writable} from "svelte/store";
-	import {Button, Icon, List, ListItem, TextField, ProgressCircular} from "svelte-materialify";
+	import {Button, Icon, ListItem, TextField} from "svelte-materialify";
 	import {debug} from "../Debugger/debug";
 	import {mdiCloudUpload, mdiDelete, mdiSyncCircle, mdiDownload} from '@mdi/js';
 	import flash, {info} from "../Flashes/flashes";
 	import GDrive from "./API/GDrive";
-	import {deserialize, serialize} from "../../app/utils/serialize";
-	import {doSave} from '../../app/utils/helpers';
+	import {deserialize, serialize} from "app/utils/serialize";
+	import {doSave, saveCallback} from 'app/utils/helpers';
+	import LoadingButton from "../LoadingButton.svelte";
 
 	const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
 	const SCOPES = 'https://www.googleapis.com/auth/drive.file';
@@ -85,12 +85,12 @@
 			}
 			if (cached) {
 				console.debug('updating cached', cached);
-				files.update(() => cached);
+				files.set(cached);
 			} else {
 				let newFiles = await GoogleDrive.listFiles(query);
 				cache.add(query, newFiles);
 				console.debug('updating', newFiles);
-				files.update(() => newFiles);
+				files.set(newFiles);
 			}
 		} catch (e) {
 			console.error(e);
@@ -104,82 +104,53 @@
 		GDrive.setAccessToken(undefined);
 	}
 
-	const download = async (file: GoogleFileMeta) => {
-		try {
-			const response: Response = await GDrive.files.download(file.id);
-			const json = await response.text();
-			const object = deserialize(json);
-			object.fileId = file.id;
-			console.debug('File downloaded', object);
-			app.invoice.set(object);
-		} catch (e) {
-			flash.error(e)
-			console.log(e);
+	const download = saveCallback(async (file: GoogleFileMeta) => {
+		const response: Response = await GDrive.files.download(file.id);
+		const json = await response.text();
+		const object = deserialize(json);
+		object.fileId = file.id;
+		console.debug('File downloaded', object);
+		app.invoice.set(object);
+	}, flash.error);
+
+	const remove = saveCallback(async (file: GoogleFileMeta) => {
+		console.debug('Removing file ' + file.name);
+		const response: Response = await GDrive.files.delete(file.id);
+		console.log(response);
+		console.log(await response.text());
+		cache.clear();
+		await listFiles(true);
+	}, flash.error);
+
+	const upload = saveCallback(async () => {
+		uploading = true;
+		info('Uploading file');
+		const jsonData = serialize(invoice);
+		console.log('Uploading file ', jsonData);
+		const response: Response = await GDrive.files.createFileMultipart(jsonData, MIME, fileInfo(invoice));
+		let data = await response.json();
+		app.invoice.update((invoice: Invoice) => {
+			invoice.fileId = data.id;
+			return invoice;
+		});
+		await listFiles(true);
+	}, flash.error, () => uploading = false);
+
+
+	const update = saveCallback(async () => {
+		uploading = true;
+		info.section('fileUpdate')('Updating file ' + invoice.title);
+		const jsonData = serialize(invoice);
+		console.debug('Updating file ', jsonData);
+		const response: Response = await GDrive.files.updateFile(invoice.fileId, jsonData, MIME, fileInfo(invoice));
+		if (response.status === 404) {
+			return upload();
 		}
-	}
+		console.debug(response);
+		await listFiles(true);
+	}, flash.error, () => uploading = false);
 
-	const remove = async (file: GoogleFileMeta) => {
-		try {
-			console.debug('Removing file ' + file.name);
-			const response: Response = await GDrive.files.delete(file.id);
-			console.log(response);
-			console.log(await response.text());
-			cache.clear();
-			await listFiles(true);
-		} catch (e) {
-			flash.error(e)
-			console.log(e);
-		}
-	}
-
-	const upload = async () => {
-		try {
-			uploading = true;
-			info('Uploading file');
-			const jsonData = serialize(invoice);
-			console.log('Uploading file ', jsonData);
-			const response: Response = await GDrive.files.createFileMultipart(jsonData, MIME, fileInfo(invoice));
-			let data = await response.json();
-			app.invoice.update((invoice: Invoice) => {
-				invoice.fileId = data.id;
-				return invoice;
-			});
-			await listFiles(true);
-		} catch (e) {
-			flash.error(e)
-			console.log(e);
-		} finally {
-			uploading = false;
-		}
-	}
-
-
-	const update = async () => {
-		if (!invoice.fileId) {
-			flash.error('File is not yet uploaded');
-			return;
-		}
-		try {
-			uploading = true;
-			info.section('fileUpdate')('Updating file ' + invoice.title);
-			const jsonData = serialize(invoice);
-			console.debug('Updating file ', jsonData);
-			const response: Response = await GDrive.files.updateFile(invoice.fileId, jsonData, MIME, fileInfo(invoice));
-			console.debug(response);
-			await listFiles(true);
-		} catch (e) {
-			flash.error(e)
-			console.debug(e);
-		} finally {
-			uploading = false;
-		}
-	}
-
-	const stringDateFormat = (dateString: string, dateFormat?: string) => {
-		let date = doSave(() => parseISO(dateString), '');
-		return doSave(() => format(date, dateFormat || settings.dateFormat), () => format(date, 'dd/MM/yyyy'));
-	}
-
+	const strToDate = (dateString: string) => doSave(() => parseISO(dateString), '');
 </script>
 
 
@@ -199,7 +170,11 @@
 		{#each $files as file}
 			<ListItem>
 				{file.name}
-				<span slot="subtitle"> {stringDateFormat(file.modifiedTime)}</span>
+				<span slot="subtitle">
+					{$date(strToDate(file.createdTime), {dateStyle: 'short', timeStyle: 'medium'})}<br>
+					{$date(strToDate(file.modifiedTime), {dateStyle: 'short', timeStyle: 'medium'})}<br>
+					<span title={file.md5Checksum}>{file.md5Checksum}</span>
+				</span>
 				<span slot="append">
 					 <Button icon class="primary-text" on:click={()=>download(file)}>
                             <Icon path="{mdiDownload}"/>
@@ -211,32 +186,11 @@
 			</ListItem>
 		{/each}
 	</div>
-	{#if invoice.fileId}
-		<Button disabled={uploading}  size="large" depressed block on:click={()=>update()}
-				class="primary-text">
-				<span class="mr-3">
-					{#if uploading}
-						<ProgressCircular size={24} indeterminate color="primary"/>
-					{:else}
-						<Icon class="primary" path="{mdiCloudUpload}"/>
-					{/if}
-				</span>
-			{$_('google.update')}
-		</Button>
-	{:else}
-		<Button disabled={uploading}  size="large" depressed block on:click={()=>upload()}
-				class="primary-text">
-			<span class="mr-3">
-				{#if uploading}
-					<ProgressCircular size={24} indeterminate color="primary"/>
-				{:else}
-					<Icon class="primary" path="{mdiCloudUpload}"/>
-				{/if}
-			</span>
-			{$_('google.upload')}
-		</Button>
-	{/if}
 
+	<LoadingButton loading={uploading} size="large" depressed block class="primary-text"
+				   on:click={invoice.fileId?()=>update():()=>upload()} icon={mdiCloudUpload}>
+		{invoice.fileId ? $_('google.update') : $_('google.upload')}
+	</LoadingButton>
 </div>
 <style>
 	.list {

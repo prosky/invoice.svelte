@@ -17,8 +17,14 @@
 		{$_('settings.title')}
 	</CardTitle>
 	<CardText>
-		<TextField bind:value={$settings.dateFormat}>{$_('settings.dateFormat')}</TextField>
+		<!--
+		<TextField bind:value={$settings.dateFormat}>
+			{$_('settings.dateFormat')}
+		</TextField>
 		<br>
-		<CustomSelect bind:value={$settings.locale} items={locales}>{$_('settings.locale')}</CustomSelect>
+		-->
+		<CustomSelect bind:value={$settings.locale} items={locales}>
+			{$_('settings.locale')}
+		</CustomSelect>
 	</CardText>
 </Card>

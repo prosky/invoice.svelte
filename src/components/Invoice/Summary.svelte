@@ -5,13 +5,12 @@
 	import {_} from 'svelte-i18n';
 	import {TextField} from "svelte-materialify";
 	import {sumPrice, sumTax} from "../../app/utils/calc";
+	import format from "../../app/utils/currencyFormatter";
 
 	export let invoice: Invoice;
-	export let format: Formatter;
 	if (!invoice) {
 		throw new Error('Invoice is not specified');
 	}
-
 	$: subTotal = sumPrice(invoice);
 	$: tax = invoice.withVAT ? sumTax(invoice) : 0;
 	$: total = subTotal + tax;
@@ -26,14 +25,14 @@
 			<th>
 				<TextField bind:value={invoice.labels.subTotal} placeholder={$_(`invoice.subTotal`)}/>
 			</th>
-			<td>{format(subTotal)}</td>
+			<td>{$format(subTotal)}</td>
 		</tr>
 		{#if invoice.withVAT}
 			<tr>
 				<th>
 					<TextField bind:value={invoice.labels.tax} placeholder={$_(`invoice.tax`)}/>
 				</th>
-				<td>{format(tax)}</td>
+				<td>{$format(tax)}</td>
 			</tr>
 		{/if}
 		</tbody>
@@ -42,7 +41,7 @@
 			<th>
 				<TextField bind:value={invoice.labels.total} placeholder={$_(`invoice.total`)}/>
 			</th>
-			<td>{format(total, true)}</td>
+			<td>{$format(total, true)}</td>
 		</tr>
 		</tbody>
 	</table>

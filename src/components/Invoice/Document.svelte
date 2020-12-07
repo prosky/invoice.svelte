@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type Invoice from "../../app/classes/Invoice";
-	import type {Formatter} from "../../app/types";
 	import {_} from 'svelte-i18n';
 	import {Col, Row, Textarea, TextField} from "svelte-materialify/src";
 	import Company from "./Company.svelte";
@@ -10,7 +9,6 @@
 	import ImagePicker from "../Inputs/ImagePicker/ImagePicker.svelte";
 
 	export let invoice: Invoice;
-	export let format: Formatter;
 </script>
 
 
@@ -63,7 +61,7 @@
 			<Products bind:invoice/>
 		</div>
 		<div class="mb-6">
-			<Summary bind:invoice bind:format/>
+			<Summary bind:invoice/>
 		</div>
 		<div class="mb-6">
 			<TextField placeholder={$_('invoice.notes')} bind:value={invoice.labels.notes}/>
