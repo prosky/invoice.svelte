@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {_} from 'svelte-i18n';
-	import {Alert, Button, Icon} from 'svelte-materialify';
+	import {Alert, Button, Icon} from 'svelte-materialify/src';
 	import {store} from './flashes';
 	import {mdiDeleteCircle } from "@mdi/js";
 

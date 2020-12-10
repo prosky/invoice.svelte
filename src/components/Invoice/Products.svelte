@@ -7,11 +7,12 @@
 	import {calculatePrice, calculateTax} from "../../app/utils/calc";
 	import {Button, Icon, Textarea, TextField} from "svelte-materialify/src";
 	import * as arrays from "../../app/utils/arrays";
+	import NumberField from "../Inputs/NumberField.svelte";
+	import format from "../../app/utils/currencyFormatter";
 
 	export let invoice: Invoice;
 
 	$: sum = (product: Product): number => (invoice.withVAT ? calculateTax(invoice, product) : 0) + calculatePrice(product);
-	$: money = (num: number): string => num.toLocaleString(invoice.locale, {minimumFractionDigits: 2});
 
 	const add = () => invoice.products = arrays.add(invoice.products, app.factory.product());
 	const remove = (index: number) => invoice.products = arrays.remove(invoice.products, index);
@@ -25,7 +26,8 @@
 		<thead>
 		<tr>
 			<th>
-				<TextField bind:value={invoice.labels.products.description} placeholder={$_('invoice.products.description')}/>
+				<TextField bind:value={invoice.labels.products.description}
+						   placeholder={$_('invoice.products.description')}/>
 			</th>
 			<th>
 				<TextField bind:value={invoice.labels.products.quantity} placeholder={$_('invoice.products.quantity')}/>
@@ -35,12 +37,18 @@
 			</th>
 			{#if invoice.withVAT}
 				<th>
-					<TextField bind:value={invoice.labels.products.taxRate} placeholder={$_('invoice.products.taxRate')}/>
+					<TextField bind:value={invoice.labels.products.taxRate}
+							   placeholder={$_('invoice.products.taxRate')}/>
 				</th>
 			{/if}
 			<th>
 				<TextField bind:value={invoice.labels.products.sum} placeholder={$_('invoice.products.sum')}/>
 			</th>
+			{#if invoice.withVAT}
+			<th>
+				<TextField bind:value={invoice.labels.products.vat_sum} placeholder={$_('invoice.products.vat_sum')}/>
+			</th>
+			{/if}
 			<th class="no-print"></th>
 		</tr>
 		</thead>
@@ -52,19 +60,24 @@
 						  placeholder={$_('invoice.products.description')}/>
 				</td>
 				<td>
-					<TextField type="number" bind:value={product.quantity}/>
+					<TextField min="0" step="1" type="number" bind:value={product.quantity}/>
 				</td>
 				<td>
-					<TextField  type="number" bind:value={product.price}/>
+					<NumberField formatter={format} bind:value={product.price}/>
 				</td>
 				{#if invoice.withVAT}
 					<td>
-						<TextField  type="number" bind:value={product.taxRate}/>
+						<TextField min="0" step="1" type="number" bind:value={product.taxRate}/>
 					</td>
 				{/if}
 				<td>
-					{money(sum(product))}
+					{$format(calculatePrice(product))}
 				</td>
+				{#if invoice.withVAT}
+					<td>
+						{$format(sum(product))}
+					</td>
+				{/if}
 				<td class="no-print">
 					<Button on:click={()=>remove(i)} class="red-text" size="small" icon title={$_('buttons.delete')}>
 						<Icon size=".8rem" path={mdiClose}/>
@@ -82,19 +95,23 @@
 </div>
 
 <style>
-	:global(.products input){
+	:global(.products input) {
 		text-align: right;
 	}
-	table{
+
+	table {
 		position: relative;
 	}
-	td:not(:first-of-type){
+
+	td:not(:first-of-type) {
 		text-align: right;
 	}
-	th:last-child{
+
+	th:last-child {
 		width: 0;
 	}
-	td:last-child{
+
+	td:last-child {
 		position: absolute;
 		right: 0;
 		transform: translateX(100%);

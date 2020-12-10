@@ -7,6 +7,9 @@ function createFormatter() {
 
 	return {
 		subscribe,
+		set(val){
+			console.log(val);
+		},
 		setInvoice: (invoice) => {
 			if (invoice.locale !== locale || invoice.currency !== currency) {
 				locale = invoice.locale;

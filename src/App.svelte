@@ -2,7 +2,7 @@
 	import Home from "./pages/Home.svelte";
 	//import Settings from "./pages/Settings.svelte";
 	import counter from "./app/utils/counter";
-	import {Button, MaterialApp} from 'svelte-materialify';
+	import {Button, MaterialApp} from 'svelte-materialify/src';
 	import Flashes from "./components/Flashes/Flashes.svelte";
 	import Debugger from "./components/Debugger/Debugger.svelte";
 	import type Application from "./app/classes/Application";

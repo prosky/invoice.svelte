@@ -3,7 +3,7 @@
 	import type {Settings} from "../app/classes/Application";
 
 	import {_} from "svelte-i18n";
-	import {Card, CardText, CardTitle, TextField} from 'svelte-materialify';
+	import {Card, CardText, CardTitle, TextField} from 'svelte-materialify/src';
 	import app from "../app";
 	import CustomSelect from "./Inputs/CustomSelect.svelte";
 	import locales from "../app/data/locales";

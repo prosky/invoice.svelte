@@ -1,7 +1,7 @@
 <script lang="ts">
     import {_} from "svelte-i18n";
     import {createEventDispatcher, onMount} from 'svelte';
-    import {Button, ListItem, ProgressCircular,Icon} from 'svelte-materialify';
+    import {Button, ListItem, ProgressCircular,Icon} from 'svelte-materialify/src';
     import loader from '@beyonk/async-script-loader';
     import googleDriveIcon from './google-drive.svg';
     import ClientConfig = gapi.auth2.ClientConfig;

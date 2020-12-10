@@ -1,12 +1,21 @@
+<script lang="ts" context="module">
+	const keyControl = {
+		ArrowUp: +1,
+		ArrowDown: -1
+	};
+</script>
+
 <script lang="ts">
+	import {tick} from 'svelte';
 	import Input from 'svelte-materialify/src/components/Input';
 	import Icon from 'svelte-materialify/src/components/Icon';
 	import uid from 'svelte-materialify/src/internal/uid';
 	import clearIcon from 'svelte-materialify/src/internal/Icons/close';
+	import type {Readable} from "svelte/store";
 
-	let klass = '';
-	export {klass as class};
-	export let value = '';
+	let _class = '';
+	export {_class as class};
+	export let value: number | null = null;
 	export let color = 'primary';
 	export let filled = false;
 	export let solo = false;
@@ -28,21 +37,38 @@
 	export let success = false;
 	export let id = `s-input-${uid(5)}`;
 	export let style = null;
+	export let formatter: Readable<(number) => string>;
 
-	export let toString: (number) => string;
-	export let toNumber: (string) => number;
+	let numberToString;
 
 	let focused = false;
-	$: labelActive = !!placeholder || value || focused;
 	let errorMessages = [];
-	let rawValue;
+	let group, decimal, regexp, regexp1, regexp2, labelActive, stringValue;
+	//$: stringValue = numberToString(value);
+	$: labelActive = Boolean(placeholder) || value || focused;
+	$: value = reverseFormatNumber(stringValue);
+
+	formatter.subscribe((format) => {
+		if (format !== numberToString) {
+			numberToString = format;
+			decimal = format(11.11).replace(/1/g, '');
+			group = format(1111).replace(/1/g, '').split(decimal)[0]
+			regexp = new RegExp('[0-9' + group + decimal + ']', 'i');
+			regexp1 = new RegExp('\\' + group, 'g');
+			regexp2 = new RegExp('\\' + decimal, 'g');
+			stringValue = format(value);
+		}
+	});
+
+	function reverseFormatNumber(val) {
+		if (!val) return 0;
+		return  parseFloat(val.replace(regexp1, '').replace(regexp2, '.'));
+		//return Number.isNaN(reversedVal) ? 0 : reversedVal;
+	}
 
 	function checkRules() {
 		errorMessages = rules.map((r) => r(value)).filter((r) => typeof r === 'string');
-		if (errorMessages.length) error = true;
-		else {
-			error = false;
-		}
+		error = !!errorMessages.length;
 	}
 
 	function onFocus() {
@@ -51,20 +77,52 @@
 
 	function onBlur() {
 		focused = false;
+		stringValue = numberToString(value);
 		if (validateOnBlur) checkRules();
 	}
 
 	function clear() {
-		value = '';
+		value = null;
 	}
 
 	function onInput() {
 		if (!validateOnBlur) checkRules();
 	}
+
+	function onKeypress(event: KeyboardEvent) {
+		const isNum = regexp.test(event.key);
+		isNum || event.preventDefault();
+		return isNum;
+	}
+
+	function onKeydown(event: KeyboardEvent) {
+		const move = keyControl[event.key];
+		if (move !== undefined) {
+			event.preventDefault();
+			const {selectionStart, selectionEnd, value} = this;
+			const start = selectionStart;
+			const end = selectionStart === selectionEnd ? selectionStart + 1 : selectionEnd;
+			const selection = value.slice(start, end);
+			const num = reverseFormatNumber(selection);
+			if (!Number.isNaN(num)) {
+				const replacement = Math.max(0,num + move);
+				stringValue = (
+					value.slice(0, start) +
+					replacement +
+					value.slice(end)
+				);
+			}
+			tick().then(() => {
+				this.selectionStart = selectionStart;
+				this.selectionEnd = selectionEnd;
+			});
+			return false;
+		}
+	}
 </script>
 
 <Input
-	class="s-text-field {klass}"
+	class="s-text-field {_class}"
 	{color}
 	{dense}
 	{readonly}
@@ -91,14 +149,16 @@
 			<slot name="content"/>
 			<input
 				type="text"
-				bind:value
+				bind:value={stringValue}
 				{placeholder}
 				{id}
 				{readonly}
 				{disabled}
-				on:focus={onFocus}
 				on:blur={onBlur}
+				on:focus={onFocus}
 				on:input={onInput}
+				on:keydown={onKeydown}
+				on:keypress={onKeypress}
 				on:focus
 				on:blur
 				on:input

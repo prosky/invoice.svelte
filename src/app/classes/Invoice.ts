@@ -9,6 +9,7 @@ export class ProductLabels extends Entity {
 	price: string = undefined
 	taxRate: string = undefined
 	sum: string = undefined
+	vat_sum: string = undefined
 }
 
 export class InvoiceLabels extends Entity {
