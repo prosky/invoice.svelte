@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {Button, Icon, ProgressCircular} from "svelte-materialify";
+	import {Button, Icon, ProgressCircular} from "svelte-materialify/src";
 
 	export let loading: boolean = false;
 	export let icon: string ;

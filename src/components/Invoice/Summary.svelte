@@ -3,7 +3,7 @@
 	import type Invoice from "../../app/classes/Invoice";
 
 	import {_} from 'svelte-i18n';
-	import {TextField} from "svelte-materialify";
+	import {TextField} from "svelte-materialify/src";
 	import {sumPrice, sumTax} from "../../app/utils/calc";
 	import format from "../../app/utils/currencyFormatter";
 

@@ -11,6 +11,7 @@ import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import url from '@rollup/plugin-url';
 import postcss from 'rollup-plugin-postcss';
+//import css from 'rollup-plugin-css-only';
 
 import alias from '@rollup/plugin-alias';
 import path from 'path';
@@ -18,7 +19,6 @@ import path from 'path';
 const ROOT_DIR = __dirname;
 const SRC_DIR = path.resolve(ROOT_DIR, 'src');
 const PUBLIC_DIR = path.resolve(ROOT_DIR, 'public');
-
 
 
 const production = !process.env.ROLLUP_WATCH;
@@ -65,9 +65,8 @@ export default {
 			compilerOptions: {
 				dev: !production,
 				css: css => {
-					css.write('bundle.css');
+					css.write('public/build/bundle.css');
 				},
-				//sourcemap: true
 			},
 			// enable run-time checks when not in production
 			//dev: !production,
@@ -87,6 +86,7 @@ export default {
 				},
 			}),
 		}),
+		//css({ output: 'bundle.css' }),
 		scss({
 			output: 'public/build/global.css',
 			sass: require('node-sass')

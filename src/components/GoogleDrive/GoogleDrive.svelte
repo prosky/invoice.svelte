@@ -27,7 +27,7 @@
 	import app from "../../app";
 	import * as GoogleDrive from "./GoogleDrive";
 	import {writable} from "svelte/store";
-	import {Button, Icon, ListItem, TextField} from "svelte-materialify";
+	import {Button, Icon, ListItem, TextField} from "svelte-materialify/src";
 	import {debug} from "../Debugger/debug";
 	import {mdiCloudUpload, mdiDelete, mdiSyncCircle, mdiDownload} from '@mdi/js';
 	import flash, {info} from "../Flashes/flashes";

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {_} from 'svelte-i18n';
-	import {Button, Icon, Overlay, ProgressCircular} from "svelte-materialify";
+	import {Button, Icon, Overlay, ProgressCircular} from "svelte-materialify/src";
 	import {mdiClose} from '@mdi/js';
 	import {readFile, resizeImage} from "./fileUtils";
 	import DropZone from "../DropZone.svelte";
