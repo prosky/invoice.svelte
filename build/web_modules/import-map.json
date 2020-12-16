@@ -1,0 +1,16 @@
+{
+  "imports": {
+    "@mdi/js": "./@mdi/js.js",
+    "date-fns": "./date-fns.js",
+    "html-to-pdfmake": "./html-to-pdfmake.js",
+    "lodash": "./lodash.js",
+    "pdfmake/build/pdfmake": "./pdfmake/build/pdfmake.js",
+    "simple-common-utils": "./simple-common-utils.js",
+    "svelte-i18n": "./svelte-i18n.js",
+    "svelte/easing": "./svelte/easing.js",
+    "svelte/motion": "./svelte/motion.js",
+    "svelte/store": "./svelte/store.js",
+    "svelte/transition": "./svelte/transition.js",
+    "utf8": "./utf8.js"
+  }
+}

@@ -42,7 +42,7 @@ export default class DataFactory {
 
 		const locale = navigator.language || DEFAULT_LOCALE;
 		const dateFormat = dateFormats[locale] || dateFormats[DEFAULT_LOCALE] || Object.keys(dateFormats)[0];
-		const [, country] = locale.split('-') || Object.keys(countries)[0];
+		const country = locale.split('-')[1] || Object.keys(countries)[0];
 		const currency = currencies[country] || Object.keys(currencies)[0];
 		return new DataFactory(locale, dateFormat, country, currency);
 	}
