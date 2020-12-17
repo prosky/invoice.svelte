@@ -90,7 +90,8 @@ export default {
 
     },
 	imagePicker:{
-		select: 'Zvolte soubor'
+		select: 'Zvolte soubor',
+		remove: 'Odstranit'
 	},
     google: {
 		title: "Google Drive",

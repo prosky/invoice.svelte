@@ -106,9 +106,12 @@
 					</td>
 				{/if}
 				<td class="no-print">
-					<Button on:click={()=>remove(i)} class="red-text" size="small" icon title={$_('buttons.delete')}>
-						<Icon size=".8rem" path={mdiClose}/>
-					</Button>
+					<div>
+						<Button on:click={()=>remove(i)} class="red-text" size="small" icon
+								title={$_('buttons.delete')}>
+							<Icon size=".8rem" path={mdiClose}/>
+						</Button>
+					</div>
 				</td>
 			</tr>
 		{/each}
@@ -125,27 +128,36 @@
 	:global(.over) {
 		background-color: #ccc;
 	}
+
 	:global(.products input) {
 		text-align: right;
 	}
+
 	tr {
 		transition: background-color .35s ease;
 	}
+
 	table {
 		position: relative;
+		table-layout: auto;
 	}
+
 	td:not(:first-of-type) {
 		text-align: right;
 	}
+
 	th:last-child {
 		width: 0;
 	}
+
 	td:last-child {
 		width: 0;
 		position: relative;
+
 		> * {
 			position: absolute;
 			right: 0;
+			top: 0;
 			transform: translateX(100%);
 			z-index: 1;
 			margin-top: .5em;

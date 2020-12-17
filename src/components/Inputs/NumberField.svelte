@@ -43,7 +43,7 @@
 
 	let focused = false;
 	let errorMessages = [];
-	let group, decimal, regexp, regexp1, regexp2, labelActive, stringValue;
+	let group, decimal, regexp, regexp1, regexp2, labelActive, stringValue, decimals;
 	//$: stringValue = numberToString(value);
 	$: labelActive = Boolean(placeholder) || value || focused;
 	$: value = reverseFormatNumber(stringValue);
@@ -52,7 +52,9 @@
 		if (format !== numberToString) {
 			numberToString = format;
 			decimal = format(11.11).replace(/1/g, '');
-			group = format(1111).replace(/1/g, '').split(decimal)[0]
+			let [_g, _x] = format(1111).replace(/1/g, '').split(decimal);
+			group = _g;
+			decimals = _x.length;
 			regexp = new RegExp('[0-9' + group + decimal + ']', 'i');
 			regexp1 = new RegExp('\\' + group, 'g');
 			regexp2 = new RegExp('\\' + decimal, 'g');
@@ -62,7 +64,7 @@
 
 	function reverseFormatNumber(val) {
 		if (!val) return 0;
-		return  parseFloat(val.replace(regexp1, '').replace(regexp2, '.'));
+		return parseFloat(val.replace(regexp1, '').replace(regexp2, '.'));
 		//return Number.isNaN(reversedVal) ? 0 : reversedVal;
 	}
 
@@ -100,17 +102,15 @@
 		if (move !== undefined) {
 			event.preventDefault();
 			const {selectionStart, selectionEnd, value} = this;
-			const start = selectionStart;
-			const end = selectionStart === selectionEnd ? selectionStart + 1 : selectionEnd;
-			const selection = value.slice(start, end);
-			const num = reverseFormatNumber(selection);
+			let position = value.substr(selectionEnd).replace(/\D/g, '').length-1;
+			let num = Number(value.replace(/\D/g, ''));
+			let indexOf = value.indexOf(decimal);
+			let _decimals = indexOf === -1 ? 0 : value.length - indexOf - 1;
 			if (!Number.isNaN(num)) {
-				const replacement = Math.max(0,num + move);
-				stringValue = (
-					value.slice(0, start) +
-					replacement +
-					value.slice(end)
-				);
+				let offset = (10 ** _decimals);
+				let rad = (10 ** position);
+				const replacement = (num + (rad * move)) / offset;
+				stringValue = numberToString(replacement);
 			}
 			tick().then(() => {
 				this.selectionStart = selectionStart;

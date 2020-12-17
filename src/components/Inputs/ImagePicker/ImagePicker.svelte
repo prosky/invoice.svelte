@@ -37,8 +37,8 @@
 
 <div class="image-picker" class:empty={!value}>
 	<div class="close" class:d-none={!value}>
-		<Button on:click={remove} icon class="red white-text">
-			<Icon path={mdiClose}/>
+		<Button  on:click={remove} text class="primary-text">
+			<Icon path={mdiClose}/> {$_('imagePicker.remove')}
 		</Button>
 	</div>
 	<Overlay absolute color="transparent" active={loading}>
@@ -69,10 +69,9 @@
 		z-index: 1;
 		position: absolute;
 		right: 0;
-		top: 0;
+		top: 100%;
 		opacity: 0;
 		transition: opacity .35s ease;
-		transform: translate(50%, -50%);
 	}
 
 	.preview {
@@ -86,15 +85,15 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		transition: background-color .35s ease;
+		transition: outline .35s ease;
+		outline: 2px solid rgba($color-primary,0);
 
 		&.empty {
 			min-height: 100%;
 		}
 
 		&:hover {
-			background-color: $color-primary;
-
+			outline-color: rgba($color-primary,1);
 			.close {
 				opacity: 1;
 			}

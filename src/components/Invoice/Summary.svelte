@@ -7,13 +7,14 @@
 	import {sumPrice, sumTax} from "../../app/utils/calc";
 	import format from "../../app/utils/currencyFormatter";
 
-	export let invoice: Invoice;
+	export let invoice : Invoice;
 	if (!invoice) {
 		throw new Error('Invoice is not specified');
 	}
 	$: subTotal = sumPrice(invoice);
 	$: tax = invoice.withVAT ? sumTax(invoice) : 0;
 	$: total = subTotal + tax;
+
 
 </script>
 

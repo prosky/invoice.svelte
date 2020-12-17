@@ -7,17 +7,17 @@ function createFormatter() {
 
 	return {
 		subscribe,
-		set(val){
+		set(val) {
 			console.log(val);
 		},
 		setInvoice: (invoice) => {
 			if (invoice.locale !== locale || invoice.currency !== currency) {
 				locale = invoice.locale;
 				currency = invoice.currency;
-				let formatter = new Intl.NumberFormat(locale, {style: "currency", currency});
+				//let formatter = new Intl.NumberFormat(locale, {style: "currency", currency});
 				set((number: number, sign: boolean = false) => {
-					if (sign) return formatter.format(number);
-					return number.toLocaleString(locale, {minimumFractionDigits: 2});
+					if (sign) return number.toLocaleString(locale, {currency,minimumFractionDigits: 2, maximumFractionDigits: 2,style:'currency'});
+					return number.toLocaleString(locale, {minimumFractionDigits: 2, maximumFractionDigits: 2});
 				});
 			}
 		},
